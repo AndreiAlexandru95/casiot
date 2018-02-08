@@ -231,5 +231,10 @@ if settings.DEBUG:
  ```
 
 6. Just to be sure we good, check if you see the debug toolbar
- `run python manage.py runserver 0.0.0.0:8000`
- `run python manage.py runserver [::]:8000`
+ ```
+ run python manage.py runserver 0.0.0.0:8000
+ 
+ run python manage.py runserver [::]:8000
+
+ ```
+
