@@ -162,7 +162,7 @@ Basically this is it, this is what you are going to need to start developing on 
  `pip install djangorestframework`
 
 2. Make its libraries available to django applications
- ```
+ ```python
  # casiot/settings.py
  INSTALLED_APPS = (
     ...
@@ -180,7 +180,7 @@ Basically this is it, this is what you are going to need to start developing on 
  `pip install django-debug-toolbar`
 
 2. Make its libraries available to django applications
- ```
+ ```python
  # casiot/settings.py
  INSTALLED_APPS = (
     ...
@@ -189,7 +189,7 @@ Basically this is it, this is what you are going to need to start developing on 
  ```
 
 3. Since we are here, lets tell django's backend to consider DDT's libraries 
- ```
+ ```python
  # casiot/settings.py
  MIDDLEWARE = [
     ...
@@ -198,11 +198,11 @@ Basically this is it, this is what you are going to need to start developing on 
  ```
 
 4. Lets now use DDT's libraries to send the debug panel only to trusted clients
- ```
+ ```python
  # casiot/settings.py
 INTERNAL_IPS = ('127.0.0.1', 'localhost', '192.168.10.254', '[fd14:ac28:a278:1:ba27:ebff:fecd:bb5b]',)
  ```
- ```
+ ```python
  Now if you want, in development you can add the following piece and make it available to everyone
  # casiot/settings.py
  def show_toolbar(request):
@@ -216,7 +216,7 @@ INTERNAL_IPS = ('127.0.0.1', 'localhost', '192.168.10.254', '[fd14:ac28:a278:1:b
  ```
 
 5. Add DDT's urls to django
- ```
+ ```python
 # casiot/urls.py
 ...
 from django.conf import settings
