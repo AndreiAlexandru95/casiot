@@ -25,7 +25,7 @@ SECRET_KEY = '6_r544@$5yytex^)(@j2zxy)(g1t5*p#fmhc@85ddn8lu)^edk'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.10.254', 'localhost', '127.0.0.1', '[fd14:ac28:a278:1:ba27:ebff:fecd:bb5b]',]
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '192.168.0.11',]
 
 # Application definition
 
@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'channels',
 ]
 
 MIDDLEWARE = [
@@ -68,6 +69,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'casiot.wsgi.application'
 
+# ASGI Config
+
+ASGI_APPLICATION = "casiot.routing.application"
 
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
@@ -121,3 +125,14 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# CHANNEL_LAYERS Setup
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("localhost", 6379)],
+        },
+    },
+}

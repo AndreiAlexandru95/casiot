@@ -15,7 +15,7 @@ Before going any further it is relevant to mention the versions of the applicati
 | `django`      | 2.0.2   |
 | `channels`    | 2.0.2	  |
 | `postgresql`	| 9.6	  |
-| ``			| 		  |
+| `virtualenv`	| 15.1	  |
 | ``			| 		  |
 | ``			| 		  |
 | ``			| 		  |
@@ -123,4 +123,26 @@ Lets get some WebSockets configuration up and running
  django.setup()
  application = get_default_application()
  ```
-6. 
+6. Setup CHANNEL_LAYERS 
+ ```python
+ # casiot/settings.py
+    CHANNEL_LAYERS = {
+        "default": {
+            "BACKEND": "channels_redis.core.RedisChannelLayer",
+            "CONFIG": {
+                "hosts": [("localhost", 6379)],
+            },
+        },
+    }
+ ```
+7. Install channels_redis 
+ `pip install channels_redis` 
+
+```
+Ok, so now that we have finished setting up channels taking in consideration future deployment lets test the Redis Server.
+
+    run *daphne -b 0.0.0.0 -p 8000 casiot.asgi:application*
+
+Now, those ugly 404s in your console and your admin page looking like s**t mean everything worked out. Don't panic. The reason is simple you need some workers to work those channels and send the static files to the client. The setup is easy and I am going to present them at Deployment section.   
+```
+
