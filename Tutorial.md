@@ -54,7 +54,7 @@ There are multiple DBs you can choose from. Every one of them has its ups and do
 5. Exit SQL prompt 
  * `\q`
 
-#### 4) Configure **Django**
+#### 4) Configure **Django** with **PostgreSQL**
 Now lets get into Django. Excited already?
 1. Install `django` and `psycopg2`
  * `pip install django psycopg2`
@@ -87,3 +87,40 @@ Now lets get into Django. Excited already?
 7. Test if server is up
  * `python manage.py runserver 0.0.0.0:8000`
  * Go to `local-ip-address:8000/`
+
+#### 5) Configure **channels**
+Lets get some WebSockets configuration up and running
+1. Install `channels`
+ * `pip install channels`
+2. Make `channels` available to `django`
+ ```python
+ # settings.py
+ INSTALLED_APPS = (
+ 	...
+ 	'channels',
+ )
+ ```
+3. Make a default routing
+ ```python
+ # casiot/routing.py
+ from channels.routing import ProtocolTypeRouter
+ application = ProtocolTypeRouter({
+ 	# Empty for now
+ })
+ ```
+4. Set ASGI_APPLICATION
+ ```python
+ # settings.py
+ ASGI_APPLICATION = "casiot.routing.application"
+ ```
+5. Set ASGI entrypoint
+ ```python
+ # casiot/asgi.py
+ import os
+ import django
+ from channels.routing import get_default_application
+ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "casiot.settings")
+ django.setup()
+ application = get_default_application()
+ ```
+6. 
