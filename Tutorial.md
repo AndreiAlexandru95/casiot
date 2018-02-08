@@ -139,10 +139,14 @@ Lets get some WebSockets configuration up and running
  `pip install channels_redis` 
 
 ```
-Ok, so now that we have finished setting up channels taking in consideration future deployment lets test the Redis Server.
+Ok, so now that we have finished setting up channels taking in consideration
+future deployment lets test the Redis Server.
 
     run *daphne -b 0.0.0.0 -p 8000 casiot.asgi:application*
 
-Now, those ugly 404s in your console and your admin page looking like s**t mean everything worked out. Don't panic. The reason is simple you need some workers to work those channels and send the static files to the client. The setup is easy and I am going to present them at Deployment section.   
+Now, those ugly 404s in your console and your admin page looking like s**t
+mean everything worked out. Don't panic. The reason is simple you need some
+workers to work those channels and send the static files to the client. The
+setup is easy and I am going to present them at Deployment section.   
 ```
 
