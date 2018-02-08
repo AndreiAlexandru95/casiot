@@ -16,7 +16,7 @@ Before going any further it is relevant to mention the versions of the applicati
 | `channels`    | 2.0.2	  |
 | `postgresql`	| 9.6	  |
 | `virtualenv`	| 15.1	  |
-| ``			| 		  |
+| `npm`			| 5.6	  |
 | ``			| 		  |
 | ``			| 		  |
 | ``			| 		  |
@@ -238,3 +238,159 @@ if settings.DEBUG:
 
  ```
 
+#### 8) React - npm setup
+1. Create the node environment
+ `run *npm init*`
+
+2. Install npm dependencies
+ `run *npm install --save-dev jquery react react-dom webpack webpack-bundle-tracker babel-loader babel-core babel-preset-es2015 babel-preset-react*`
+
+#### 9) Webpack configuration
+1. Create folders to hold your React code & your static files
+ `run *mkdir -p components/home*`
+ `run *mkdir static*`
+
+2. Create config file for Webpack
+ ```python
+ # webpack.config.js
+var path = require('path')
+var webpack = require('webpack')
+var BundleTracker = require('webpack-bundle-tracker')
+
+module.exports = {
+    context: __dirname,
+    entry: {
+        home: './components/home/index',
+    },
+    output: {
+        path: path.resolve('./static/bundles/'),
+        filename: "[name]-[hash].js"
+    },
+    plugins: [
+        new BundleTracker({path: __dirname, filename: './webpack-stats.json'}),
+        new webpack.NoEmitOnErrorsPlugin(),
+        new webpack.ProvidePlugin({
+            $: 'jquery',
+            jQuery: 'jquery',
+            'window.jQuery': 'jquery'
+        }),
+    ],
+    module: {
+        loaders: [
+            {
+                test: /\.jsx?$/,
+                exclude: /(node_modules)/,
+                loader: 'babel-loader',
+                query: {
+                    presets: ['react']
+                }
+            },
+        ]
+    },
+    resolve: {
+        modules: ['node_modules'],
+            extensions: ['.js', '.jsx']
+    },
+}
+ ```
+
+3. Test if webpack is configured correctly
+ * Write test content
+ ```javascript
+ # components/home/index.jsx
+var React = require('react')
+var ReactDOM = require('react-dom')
+
+
+ReactDOM.render(<h1>Hello, React!<h1>, document.getElementById('container'))
+ ```
+ * Create bundle
+ `run *./node_modules/.bin/webpack --config webpack.config.js*`
+
+#### 10) Integrate webpack in django
+1. Install django-webpack-loader
+ `run *pip install django-webpack-loader*`
+
+2. Adapt settings
+ ```python
+ # casiot/settings.py
+INSTALLED_APPS = (
+    ...
+    'webpack_loader',
+)
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
+
+TEMPLATES = [
+    {
+        ...
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        ...
+    }
+]
+
+WEBPACK_LOADER = {
+    'DEFAULT': {
+        'BUNDLE_DIR_NAME': 'bundles/',
+        'STATS_FILE': os.path.join(BASE_DIR, 'webpack-stats.json'),
+    }
+}
+ ```
+
+3. Create an html template
+ ```html
+{% load static %}
+{% load render_bundle from webpack_loader %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>This is a test!</title>
+</head>
+<body>
+    <h3>Test</h3>
+    <hr>
+    <div id="container"></div>
+    {% render_bundle 'home'%}
+</body>
+</html>
+ ```
+
+4. Finally, Create the application
+ `run *python manage.py startapp interface*`
+ Add *interface* to *INSTALLED_APPS*
+
+5. Create a view to link the html to the backed
+ ```python
+ # interface/views.py 
+from django.views.generic import TemplateView
+
+class HomeView(TemplateView):
+    template_name = 'home.html'
+ ```
+
+6. Link the view to application's URL
+ ```python
+ # interface/urls.py
+from django.urls import path
+from interface.views import HomeView
+
+
+urlpatterns = [
+    path('', HomeView.as_view()),
+]
+ ```
+
+7. Next lets link the app's urls to django's urls
+ ```python
+ # casiot/urls.py
+urlpatterns = [
+    ...
+    path('', include('interface.urls')),
+]
+ ```
+
+8. Test
+`run *python manage.py runserver 0.0.0.0:8000*`
+`run *python manage.py runserver 0.0.0.0:8000*`

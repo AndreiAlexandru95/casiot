@@ -102,3 +102,4 @@ ENV/
 
 # npm
 node_modules/
+static/bundles/
