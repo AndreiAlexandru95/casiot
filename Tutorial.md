@@ -147,6 +147,89 @@ future deployment lets test the Redis Server.
 Now, those ugly 404s in your console and your admin page looking like s**t
 mean everything worked out. Don't panic. The reason is simple you need some
 workers to work those channels and send the static files to the client. The
-setup is easy and I am going to present them at Deployment section.   
+setup is easy and I am going to present them at Deployment section. 
+
+If you have an ipv6 host then also test (and see what happends)
+
+    run *daphne -b [::] -p 8000 casiot.asgi:application*   
 ```
 
+#### Ok so we have finally finished setting up the backend! (mostly) 
+Basically this is it, this is what you are going to need to start developing on a backend based on django that wants to have channels incorporated.  
+
+#### 6) FRONTEND! Django REST Framework configuration
+1. Install DRF
+ `pip install djangorestframework`
+
+2. Make its libraries available to django applications
+ ```
+ # casiot/settings.py
+ INSTALLED_APPS = (
+    ...
+    rest_framework,
+)
+ ```
+
+ 3. That is it. It is that simple to have a top API available
+
+#### 7) Setting up Django Debug Toolbar 
+
+### Now this is optional (if you don't want to have control over your project performance) 
+
+1. Install DDT
+ `pip install django-debug-toolbar`
+
+2. Make its libraries available to django applications
+ ```
+ # casiot/settings.py
+ INSTALLED_APPS = (
+    ...
+    'debug_toolbar',
+    )
+ ```
+
+3. Since we are here, lets tell django's backend to consider DDT's libraries 
+ ```
+ # casiot/settings.py
+ MIDDLEWARE = [
+    ...
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
+ ]
+ ```
+
+4. Lets now use DDT's libraries to send the debug panel only to trusted clients
+ ```
+ # casiot/settings.py
+INTERNAL_IPS = ('127.0.0.1', 'localhost', '192.168.10.254', '[fd14:ac28:a278:1:ba27:ebff:fecd:bb5b]',)
+ ```
+ ```
+ Now if you want, in development you can add the following piece and make it available to everyone
+ # casiot/settings.py
+ def show_toolbar(request):
+    return True
+ DEBUG_TOOLBAR_CONFIG = {
+    "SHOW_TOOLBAR_CALLBACK": show_toolbar,
+ }
+ ```
+ ```
+ One last thing, before we move on, if you go production delete all about DDT including the above
+ ```
+
+5. Add DDT's urls to django
+ ```
+# casiot/urls.py
+...
+from django.conf import settings
+from django.urls import include
+...
+...
+if settings.DEBUG:
+    import debug_toolbar
+    urlpatterns += [
+        path('__debug__/', include(debug_toolbar.urls)),
+    ]
+ ```
+
+6. Just to be sure we good, check if you see the debug toolbar
+ `run python manage.py runserver 0.0.0.0:8000`
+ `run python manage.py runserver [::]:8000`
