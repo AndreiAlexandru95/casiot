@@ -20,12 +20,14 @@ from django.conf import settings
 
 from django.views.generic.edit import CreateView
 from django.contrib.auth.forms import UserCreationForm
-
+from django.contrib.auth.views import LoginView, LogoutView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('interface.urls')),
     path('register/', CreateView.as_view(template_name='account/register.html', form_class=UserCreationForm, success_url='/')),
+    path('login/', LoginView.as_view(template_name='account/login.html')),
+    path('logout/', LogoutView.as_view()),
 ]
 
 if settings.DEBUG:
