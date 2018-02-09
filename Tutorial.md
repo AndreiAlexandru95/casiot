@@ -515,3 +515,90 @@ path('register/', CreateView.as_view(template_name='account/register.html', form
 </div>
 {% endblock %}
 ```
+
+#### 3) User Login
+Again we are going to use django's defaults.
+1. Add the following to your server's urls
+```python
+# casiot/urls.py
+...
+from django.contrib.auth.views import LoginView
+...
+urlpatterns = [
+...
+path('login/', LoginView.as_view(template_name='account/login.html')),
+]
+```
+
+2. Create the template *login.html*
+```html
+{% extends "../base.html" %}
+{% load static %}
+
+{% block additional_head %}
+        <link rel="stylesheet" href={% static "css/login.css" %}>
+{% endblock %}
+
+{% block main_content %}
+<div class="container">
+    <h1 class="text-center">Login to Demo</h1>
+    <br>
+    <form method="post">
+        {% csrf_token %}
+        {% for field in form %}
+        <div class="form-group row justify-content-start no-gutters">
+            <label class="col-3">{{ field.label }}</label>
+            <div class="col-9 align-self-start">
+                {{ field }}
+                {% if field.errors %}
+                <br>
+                <p class="text-danger">
+                    {% for error in field.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </p>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+        <div class="form-group row justyify-content-start no-gutters">
+            <div class="col-3">
+            </div>
+            <div class="col-9 align-self-start">
+                <button type="submit" class="btn btn-primary">Login</butto$
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}
+```
+
+3. Login is a bit different and needs some settings as well to redirect accordingly
+```python
+# casiot/settings.py
+LOGIN_REDIRECT_URL = '/'
+```
+
+#### 4) User Logout
+Very simple - same as above
+1. Add the following to your server's urls
+```python
+# casiot/urls.py
+...
+from django.contrib.auth.views import LogoutView
+...
+urlpatterns = [
+...
+path('logout/', LogoutView.as_view()),
+]
+```
+
+2. Add Logout redirect at settings
+```python
+# casiot/settings.py
+LOGOUT_REDIRECT_URL = '/login/'
+```
+3. To test this add a logout button at *home.html*
+```html
+<a href="/logout/" class="btn btn-info" role="button">Logout</a>
+```
