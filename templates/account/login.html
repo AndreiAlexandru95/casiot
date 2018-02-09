@@ -1,0 +1,39 @@
+{% extends "../base.html" %}
+{% load static %}
+
+{% block additional_head %}
+	<link rel="stylesheet" href={% static "css/login.css" %}>
+{% endblock %}
+
+{% block main_content %}
+<div class="container">
+    <h1 class="text-center">Login to Demo</h1>
+    <br>
+    <form method="post">
+        {% csrf_token %}
+        {% for field in form %}
+        <div class="form-group row justify-content-start no-gutters">
+            <label class="col-3">{{ field.label }}</label>
+            <div class="col-9 align-self-start">
+                {{ field }}
+                {% if field.errors %}
+                <br>
+                <p class="text-danger">
+                    {% for error in field.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </p>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+        <div class="form-group row justyify-content-start no-gutters">
+            <div class="col-3">
+            </div>
+            <div class="col-9 align-self-start">
+                <button type="submit" class="btn btn-primary">Login</button>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}
