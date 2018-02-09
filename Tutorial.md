@@ -410,11 +410,11 @@ There are 2 ways of getting bootstrap 4 on your html pages.
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, sh$
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="Cascoda - Open Thread - Demo">
     <meta name="author" content="Andrei Alexandru">
     <!-- Bootstrap core CSS -->
-    <link rel="stylesheet" href={% static "third_party/bootstrap/css/boots$
+    <link rel="stylesheet" href={% static "third_party/bootstrap/css/bootstrap.min.css" %}>
     <!-- Custom Style -->
     {% block additional_head %}
     {% endblock %}
@@ -426,13 +426,13 @@ There are 2 ways of getting bootstrap 4 on your html pages.
     <!-- Footer Content -->
     <footer class="footer">
         <div class="container text-center">
-            <span class="text-muted">&copy; <a class="text-muted" href="ht$
+            <span class="text-muted">&copy; <a class="text-muted" href="http://www.cascoda.com/">CASCODA LTD.</a> 2018</span>
         </div>
     </footer>
     <!-- Bootstrap core JavaScript -->
-    <script src={% static "third_party/bootstrap/js/jquery-3.3.1.min.js" %$
-    <script src={% static "third_party/bootstrap/js/tether.min.js" %}></sc$
-    <script src={% static "third_party/bootstrap/js/bootstrap.min.js" %}><$
+    <script src={% static "third_party/bootstrap/js/jquery-3.3.1.min.js" %}></script>
+    <script src={% static "third_party/bootstrap/js/tether.min.js" %}></script>
+    <script src={% static "third_party/bootstrap/js/bootstrap.min.js" %}></script>
     <!-- Additional JavaScript -->
     {% block additional_js %}
     {% endblock %}
@@ -508,7 +508,7 @@ path('register/', CreateView.as_view(template_name='account/register.html', form
             <div class="col-3">
             </div>
             <div class="col-9 align-self-start">
-                <button type="submit" class="btn btn-primary">Register</bu$
+                <button type="submit" class="btn btn-primary">Register</button>
             </div>
         </div>
     </form>
