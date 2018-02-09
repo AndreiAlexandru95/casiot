@@ -1,0 +1,40 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Cascoda - Open Thread - Demo">
+    <meta name="author" content="Andrei Alexandru">
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href={% static "third_party/bootstrap/css/bootstrap.min.css" %}>
+
+    <!-- Custom Style -->
+    <link rel="stylesheet" href={% static "css/casiot.css" %}>
+    {% block additional_head %}
+    {% endblock %}
+</head>
+<body>
+    <!-- Main Content -->
+    {% block main_content %}
+    {% endblock %}
+
+    <!-- Footer Content -->
+    <footer class="footer">
+        <hr>
+        <div class="container text-center">
+            <span class="text-muted">&copy; <a class="text-muted" href="http://www.cascoda.com/">CASCODA LTD.</a> 2018</span>
+        </div> 
+    </footer>
+
+    <!-- Bootstrap core JavaScript -->
+    <script src={% static "third_party/bootstrap/js/jquery-3.3.1.min.js" %}></script>
+    <script src={% static "third_party/bootstrap/js/tether.min.js" %}></script>
+    <script src={% static "third_party/bootstrap/js/bootstrap.min.js" %}></script>
+
+    <!-- Additional JavaScript -->
+    {% block additional_js %}
+    {% endblock %}
+</body>
+</html>
