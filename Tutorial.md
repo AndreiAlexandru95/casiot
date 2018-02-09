@@ -17,10 +17,6 @@ Before going any further it is relevant to mention the versions of the applicati
 | `postgresql`	| 9.6	  |
 | `virtualenv`	| 15.1	  |
 | `npm`			| 5.6	  |
-| ``			| 		  |
-| ``			| 		  |
-| ``			| 		  |
-| ``			| 		  |
 
 
 ### Initial Setup
@@ -256,7 +252,6 @@ if settings.DEBUG:
 var path = require('path')
 var webpack = require('webpack')
 var BundleTracker = require('webpack-bundle-tracker')
-
 module.exports = {
     context: __dirname,
     entry: {
@@ -300,8 +295,6 @@ module.exports = {
  # components/home/index.jsx
 var React = require('react')
 var ReactDOM = require('react-dom')
-
-
 ReactDOM.render(<h1>Hello, React!<h1>, document.getElementById('container'))
  ```
  * Create bundle
@@ -318,11 +311,9 @@ INSTALLED_APPS = (
     ...
     'webpack_loader',
 )
-
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
-
 TEMPLATES = [
     {
         ...
@@ -330,7 +321,6 @@ TEMPLATES = [
         ...
     }
 ]
-
 WEBPACK_LOADER = {
     'DEFAULT': {
         'BUNDLE_DIR_NAME': 'bundles/',
@@ -365,7 +355,6 @@ WEBPACK_LOADER = {
  ```python
  # interface/views.py 
 from django.views.generic import TemplateView
-
 class HomeView(TemplateView):
     template_name = 'home.html'
  ```
@@ -375,8 +364,6 @@ class HomeView(TemplateView):
  # interface/urls.py
 from django.urls import path
 from interface.views import HomeView
-
-
 urlpatterns = [
     path('', HomeView.as_view()),
 ]
@@ -394,3 +381,137 @@ urlpatterns = [
 8. Test
 `run *python manage.py runserver 0.0.0.0:8000*`
 `run *python manage.py runserver 0.0.0.0:8000*`
+
+### Finish!
+
+## Creating and managing the site
+
+#### 1) Getting the base
+1. Adding bootstrap 4
+There are 2 ways of getting bootstrap 4 on your html pages. 
+ * The easy to write but performance cost way:
+ * Add <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">*
+ * Add <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>*
+ * Add <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>*
+ * Add <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>*
+
+ * The harded to write but better performance way:
+ Download the minified versions of bootstrap4 to your *static/third_party/bootstrap/* folder
+ * Add <link rel="stylesheet" href={% static "third_party/bootstrap/css/bootstrap.min.css" %}>*
+ * Add <script src={% static "third_party/bootstrap/js/jquery-3.3.1.min.js" %}></script>*
+ * Add <script src={% static "third_party/bootstrap/js/tether.min.js" %}></script>*
+ * Add <script src={% static "third_party/bootstrap/js/bootstrap.min.js" %}></script>*
+
+2. Create *base.html*
+ ```html
+<!-- templates/base.html -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, sh$
+    <meta name="description" content="Cascoda - Open Thread - Demo">
+    <meta name="author" content="Andrei Alexandru">
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href={% static "third_party/bootstrap/css/boots$
+    <!-- Custom Style -->
+    {% block additional_head %}
+    {% endblock %}
+</head>
+<body>
+    <!-- Main Content -->
+    {% block main_content %}
+    {% endblock %}
+    <!-- Footer Content -->
+    <footer class="footer">
+        <div class="container text-center">
+            <span class="text-muted">&copy; <a class="text-muted" href="ht$
+        </div>
+    </footer>
+    <!-- Bootstrap core JavaScript -->
+    <script src={% static "third_party/bootstrap/js/jquery-3.3.1.min.js" %$
+    <script src={% static "third_party/bootstrap/js/tether.min.js" %}></sc$
+    <script src={% static "third_party/bootstrap/js/bootstrap.min.js" %}><$
+    <!-- Additional JavaScript -->
+    {% block additional_js %}
+    {% endblock %}
+</body>
+</html>
+ ```
+
+3. Edit *home.html* and test if everything worked out
+```html
+{% load static %}
+{% load render_bundle from webpack_loader %}
+
+{% extends "base.html" %}
+
+{% block main_content %}
+    <h3>Home</h3>
+    <hr>
+    <div id="container">Cry Baby Cry!</div>
+{% endblock %}
+
+{% block additional_js %}
+    {% render_bundle 'home' %}
+{% endblock %}
+
+```
+
+#### 2) User Registration
+I don't know who you are, but if you want a proper site&server that provide valuable information to the users, you must have an accounting system
+The thing is that the accounting part has really no connection to the application part except for privileges to access it. So we might as well separate the accounting bit of our server and also keep it clean by using Django's default accounting system. 
+1. Add the following to your server's urls and Django will take care of User Registration
+```python
+# casiot/urls.py
+...
+from django.views.generic.edit import CreateView
+from django.contrib.auth.forms import UserCreationForm
+...
+urlpatterns = [
+...
+path('register/', CreateView.as_view(template_name='account/register.html', form_class=UserCreationForm, success_url='/')),
+]
+```
+2. Provide a *register.html*
+```html
+{% extends "../base.html" %}
+
+{% block additional_head %}
+<link rel="stylesheet" href={% static "css/register.css" %}>
+{% endblock %}
+
+{% block main_content %}
+<div class="container">
+    <h2 class="text-center">Register to Demo</h2>
+    <br>
+    <form method="post">
+        {% csrf_token %}
+        {% for field in form %}
+        <div class="form-group row justify-content-start no-gutters">
+            <label class="col-3 text-info">{{ field.label }}</label>
+            <div class="col-9 align-self-start">
+                {{ field }}
+                {% if field.errors %}
+                <br>
+                <p class="text-danger">
+                    {% for error in field.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </p>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+        <div class="form-group row justyify-content-start no-gutters">
+            <div class="col-3">
+            </div>
+            <div class="col-9 align-self-start">
+                <button type="submit" class="btn btn-primary">Register</bu$
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}
+```
