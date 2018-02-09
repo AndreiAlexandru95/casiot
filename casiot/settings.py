@@ -25,7 +25,7 @@ SECRET_KEY = '6_r544@$5yytex^)(@j2zxy)(g1t5*p#fmhc@85ddn8lu)^edk'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '192.168.0.11',]
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '192.168.10.254', '[fd14:ac28:a278:1:ba27:ebff:fecd:bb5b]',]
 
 # Application definition
 
@@ -148,7 +148,7 @@ CHANNEL_LAYERS = {
 
 # DDT Setup 
 
-INTERNAL_IPS = ('127.0.0.1','localhost','192.168.0.11',)
+INTERNAL_IPS = ('127.0.0.1','localhost','192.168.10.254','192.168.10.43', '[fd14:ac28:a278:1:ba27:ebff:fecd:bb5b]',)
 
 def show_toolbar(request):
     return True
