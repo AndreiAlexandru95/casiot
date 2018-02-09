@@ -1,14 +1,17 @@
+{% extends "base.html" %}
+
 {% load static %}
+
 {% load render_bundle from webpack_loader %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<title>Test</title>
-</head>
-<body>
-	<h3>Test</h3>
-	<hr>
-	<div id="container">Cry Baby Cry!</div>
-	{% render_bundle 'home' %}
-</body>
-</html>
+
+{% block main_content %}
+    <h3>Home</h3>
+    <hr>
+    <div id="container">Cry Baby Cry!</div>
+{% endblock %}
+
+{% block additional_js %}
+
+    {% render_bundle 'home' %}
+
+{% endblock %}
