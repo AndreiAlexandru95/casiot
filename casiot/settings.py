@@ -146,7 +146,7 @@ CHANNEL_LAYERS = {
     },
 }
 
-# DDT Setup 
+# DDT Setup
 
 INTERNAL_IPS = ('127.0.0.1','localhost','192.168.10.254','192.168.10.43', '[fd14:ac28:a278:1:ba27:ebff:fecd:bb5b]',)
 
