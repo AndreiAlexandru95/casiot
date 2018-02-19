@@ -11,11 +11,14 @@ def main():
     from interface.models import Device
     from django.contrib.auth.models import User
 
-    User.objects.create_user('alex', 'alex@demo.com', 'fc82bqk2')
-    User.objects.create_user('victor', 'victor@demo.com', 'fc82bqk2')
+    andrei = User.objects.create_user('andrei', 'alex@demo.com', 'fc82bqk2')
+    victor = User.objects.create_user('victor', 'victor@demo.com', 'fc82bqk2')
 
-    Device.create_update_device(device_key='key01')
-    Device.create_update_device(device_key='key02')
+    admin = User.objects.get(username='admin')
+    dev1 = Device.create_update_device(device_key='key01', user=admin)
+    dev1.sign_device(andrei)
+    dev2 = Device.create_update_device(device_key='key02', user=admin)
+    dev2.sign_device(victor)
 
     for i in range(1,10001):
         d_value = randint(25,35)
@@ -27,9 +30,9 @@ def main():
         elif ok == 3:
             d_value += 0.75
 
-        dev = Device.create_update_device(device_key='key01')
+        dev = Device.create_update_device(device_key='key01', user=admin)
         dev.update_value(value=d_value, ip_addr='demo-ip-01')
-        dev = Device.create_update_device(device_key='key02')
+        dev = Device.create_update_device(device_key='key02', user=admin)
         dev.update_value(value=d_value, ip_addr='demo-ip-02')
 
 if __name__ == "__main__":

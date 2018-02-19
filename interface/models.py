@@ -8,7 +8,7 @@ from datetime import datetime
 
 class Device(models.Model):
     dev_key = models.CharField(max_length=16, unique=True)
-    user = models.ForeignKey(User, null=True, blank=True, default=None, on_delete=models.SET_DEFAULT, db_index=True)
+    users = models.ManyToManyField(User, db_index=True)
     name = models.CharField(max_length=32, default='Cascoda')
     info = models.TextField(max_length=64, default='Demo Sensor for Thread')
     ip_addr = models.CharField(max_length=45, blank=True, null=True, default=None)
@@ -25,18 +25,19 @@ class Device(models.Model):
         return '%s | %s' % (self.dev_key, self.ip_addr)
 
     @staticmethod
-    def create_update_device(device_key):
+    def create_update_device(device_key, user):
         try:
             return Device.objects.get(dev_key=device_key)
         except Device.DoesNotExist:
             new_dev = Device.objects.create(dev_key=device_key)
+            new_dev.users.add(user)
             new_dev.add_log(DeviceLog.INFO, 'Device registered to the database', datetime.now())
             return new_dev
 
     def sign_device(self, user):
-        self.user = user
+        self.users.add(user)
         self.signed = datetime.now()
-        self.save(update_fields=['user', 'signed'])
+        self.save(update_fields=['signed'])
         self.add_log(DeviceLog.INFO, 'Device signed by {0}, id {1}'.format(user.username, user.id), datetime.now())
 
     def update_value(self, value, ip_addr):

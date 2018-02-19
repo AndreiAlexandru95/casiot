@@ -4,14 +4,16 @@ from rest_framework.authentication import SessionAuthentication, BasicAuthentica
 from rest_framework.permissions import IsAuthenticated
 
 from interface.models import DeviceChart, DeviceLog, Device
-from interface.serializers import DeviceChartSerializer, DeviceLogSerializer, DeviceSerializer
+from django.contrib.auth.models import User
+from interface.serializers import DeviceChartSerializer, DeviceLogSerializer, DeviceSerializer, UserSerializer
+from interface.permissions import DevicePermission
 
 from django.shortcuts import get_object_or_404
 
 
 class DeviceChartViewSet(viewsets.ViewSet):
     authentication_classes = (SessionAuthentication, BasicAuthentication)
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (DevicePermission,)
 
     def list(self, request, pk=None):
         queryset = DeviceChart.objects.filter(device=pk).only('value', 'date')
@@ -20,7 +22,7 @@ class DeviceChartViewSet(viewsets.ViewSet):
 
 class DeviceLogViewSet(viewsets.ViewSet):
     authentication_classes = (SessionAuthentication, BasicAuthentication)
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (DevicePermission,)
 
     def list(self, request, pk=None):
         queryset = DeviceLog.objects.filter(device=pk).only('type', 'text', 'date')
@@ -29,7 +31,7 @@ class DeviceLogViewSet(viewsets.ViewSet):
 
 class DeviceViewSet(viewsets.ViewSet):
     authentication_classes = (SessionAuthentication, BasicAuthentication)
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (DevicePermission,)
 
     def retrieve(self, request, pk=None):
         try:
@@ -37,4 +39,16 @@ class DeviceViewSet(viewsets.ViewSet):
             serializer = DeviceSerializer(queryset)
             return Response(serializer.data)
         except Device.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+class UserViewSet(viewsets.ViewSet):
+    authentication_classes = (SessionAuthentication, BasicAuthentication)
+    permission_classes = (IsAuthenticated,)
+
+    def retrieve(self, request):
+        try:
+            queryset = User.objects.get(username=request.user.username)
+            serializer = UserSerializer(queryset)
+            return Response(serializer.data)
+        except User.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
