@@ -8,8 +8,10 @@ class DevicePermission(permissions.BasePermission):
         return request.user.is_authenticated
 
     def has_object_permission(self, request, view, obj):
-        return False
-        #if request.user in obj.users.all():
-        #    return True
-        #else:
-        #    return False
+        print(request.user)
+        print(obj)
+        print(obj.users.all())
+        if request.user in obj.users.all():
+            return True
+        else:
+            return False
