@@ -8,7 +8,7 @@
     <meta name="author" content="Andrei Alexandru">
 
     <!-- Bootstrap core CSS -->
-    <link rel="stylesheet" href={% static "third_party/bootstrap/css/bootstrap.min.css" %}>
+    <link rel="stylesheet" href={% static "third_party/bootstrap/css/bootstrap.css" %}>
 
     <!-- Custom Style -->
     <link rel="stylesheet" href={% static "css/casiot.css" %}>
@@ -16,6 +16,46 @@
     {% endblock %}
 </head>
 <body>
+    <nav class="navbar navbar-expand-md navbar-light">
+        <a class="navbar-brand" href="https://www.cascoda.com/">
+            <img src={% static "img/cascoda.png" %} width="40" height="40" class="rounded-circle" alt="Cascoda">
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navTabs" aria-controls="navTabs" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse d-flex justify-content-end" id="navTabs">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item px-md-3">
+                    <a class="nav-link" href="/">Home</a>
+                </li>
+                <li class="nav-item px-md-3">
+                    <a class="nav-link" href="#">Devices</a>
+                </li>
+                <li class="nav-item px-md-3">
+                    <a class="nav-link" href="#">Documentation</a>
+                </li>
+                <li class="nav-item px-md-3">
+                    <a class="nav-link" href="#">Contact</a>
+                </li>
+                {% if request.user.is_authenticated %}
+                <li class="nav-item px-md-3">
+                    <a class="nav-link" href="/logout/">Logout</a>
+                </li>
+                {% else %}
+                <li class="nav-item px-md-3">
+                    <a class="nav-link" href="/register/">Signup</a>
+                </li>
+                <li class="nav-item px-md-3">
+                    <a class="nav-link" href="/login/">Login</a>
+                </li>
+                {% endif %}
+            </ul>
+            {% if request.user.is_authenticated %}
+            <span class="navbar-text justify-content-end pr-md-5">Hi {{request.user}}!</span>
+            {% endif %}
+        </div>
+    </nav>
+
     <!-- Main Content -->
     {% block main_content %}
     {% endblock %}
@@ -24,7 +64,7 @@
     <footer class="footer">
         <hr>
         <div class="container text-center">
-            <span class="text-muted">&copy; <a class="text-muted" href="http://www.cascoda.com/">CASCODA LTD.</a> 2018</span>
+            <span class="text-muted">&copy; <a class="text-muted" href="https://www.cascoda.com/">CASCODA LTD.</a> 2018</span>
         </div> 
     </footer>
 
