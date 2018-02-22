@@ -64,8 +64,8 @@ class Devices extends React.Component {
 			return devices.map(function(device) {
 				return (
 					<div className="text-muted pt-md-3" key={device.id}>
-						<p className="border-bottom border-gray pb-md-3 mb-md-0 small">
-							<strong className="d-block text-gray-dark">@{device.id} {device.name}</strong>
+						<p className="border-bottom border-gray pb-md-3 mb-md-0 white-t-color">
+							<strong className="d-block red-t-color">@{device.id} {device.name}</strong>
 							{device.info} {device.ip_addr} {device.commands} {device.value}
 						</p>
 					</div>
@@ -78,8 +78,8 @@ class Devices extends React.Component {
 
 	render() {
 		return (
-			<div className="rounded box-shadow my-md-3 p-md-3 bg-white">
-				<h3 className="border-bottom border-gray pb-md-2 mb-md-0">Available devices</h3>
+			<div className="rounded border box-shadow my-md-3 p-md-3 lblue-bg-color">
+				<h3 className="border-bottom border-gray pb-md-2 mb-md-0 blue-t-color">Available devices</h3>
 				{this.renderDeviceList()}
 			</div>
 		);
