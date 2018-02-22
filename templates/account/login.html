@@ -5,16 +5,17 @@
 	<link rel="stylesheet" href={% static "css/login.css" %}>
 {% endblock %}
 
+
 {% block main_content %}
-<div class="container">
-    <h1 class="text-center">Login to Demo</h1>
-    <br>
+<div class="container text-center">
     <form method="post">
         {% csrf_token %}
+        <img src={% static "img/cascoda.png" %} width="75" height="75" class="rounded-circle mb-4" alt="Cascoda">
+        <h1 class="h3 mb-3 font-weight-normal blue-t-color">Please sign in</h1>
         {% for field in form %}
-        <div class="form-group row justify-content-start no-gutters">
-            <label class="col-3">{{ field.label }}</label>
-            <div class="col-9 align-self-start">
+        <div class="form-group d-md-flex justify-content-center">
+            <label class="blue-t-color">{{ field.label }}</label>
+            <div class="px-md-3">
                 {{ field }}
                 {% if field.errors %}
                 <br>
@@ -27,12 +28,8 @@
             </div>
         </div>
         {% endfor %}
-        <div class="form-group row justyify-content-start no-gutters">
-            <div class="col-3">
-            </div>
-            <div class="col-9 align-self-start">
-                <button type="submit" class="btn btn-primary">Login</button>
-            </div>
+        <div class="container d-md-flex justify-content-center">
+            <button type="submit" class="btn btn-primary btn-md btn-block w-50">Login</button>
         </div>
     </form>
 </div>

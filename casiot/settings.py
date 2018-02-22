@@ -64,7 +64,7 @@ TEMPLATES = [
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
-                'django.template.context_processors.request',
+                'django.template.context_processors.request',   
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
@@ -148,7 +148,7 @@ CHANNEL_LAYERS = {
 
 # DDT Setup
 
-INTERNAL_IPS = ('127.0.0.1','localhost','192.168.10.254','192.168.10.43', '[fd14:ac28:a278:1:ba27:ebff:fecd:bb5b]',)
+INTERNAL_IPS = ('127.0.0.1','localhost','192.168.10.254','192.168.10.43', '[fd14:ac28:a278:1:ba27:ebff:fecd:bb5b]','[192.168.0.11]',)
 
 def show_toolbar(request):
     return True
