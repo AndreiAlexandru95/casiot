@@ -18,7 +18,7 @@ class DeviceLogSerializer(serializers.ModelSerializer):
 class DeviceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Device
-        fields = ('users', 'name', 'info', 'ip_addr', 'timer', 'th_min', 'th_max', 'registered', 'signed', 'modified', 'value', 'commands')
+        fields = ('id', 'users', 'name', 'info', 'ip_addr', 'timer', 'th_min', 'th_max', 'registered', 'signed', 'modified', 'value', 'commands')
 
 class UserSerializer(serializers.ModelSerializer):
     device_set = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
