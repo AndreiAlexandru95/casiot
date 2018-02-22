@@ -1,6 +1,14 @@
-from channels.routing import ProtocolTypeRouter
+from django.urls import path
 
+from channels.routing import ProtocolTypeRouter, URLRouter
+from channels.auth import AuthMiddlewareStack
+
+from interface.consumers import DeviceConsumer
 
 application = ProtocolTypeRouter({
-	# Empty for now
+	"websocket": AuthMiddlewareStack(
+		URLRouter([
+			path("devices/", DeviceConsumer),
+		]),
+	),
 })
