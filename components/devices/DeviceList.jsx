@@ -60,27 +60,38 @@ class Devices extends React.Component {
 
 		if (devices.length > 0) {
 			return devices.map(function(device) {
+				let dev_det_id = "dev_det_".concat(device.id.toString());
+
 				return (
 					<div className="card bg-light mb-md-2" key={device.id}>
 						<div className="card-body no-pad-h">
 							<div className="d-flex flex-column">
-								<a className="card-title text-center text-success font-weight-bold border-bottom border-secondary dblue-bg-color" href={"/api/device/"+device.id+"/"}>{device.name}@dev{device.id}</a>
-								<p className="d-flex justify-content-between mx-md-3">
-									<span className="text-info font-weight-bold">Description:</span>
-									<span className="text-muted font-weight-bold">{device.info}</span>
+								<p className="card-title font-weight-bold border-bottom border-secondary dblue-bg-color mb-md-0 d-flex justify-content-between">
+									<button type="button" className="btn text-white font-weight-bold dblue-bg-color" data-toggle="collapse" data-target={"#"+dev_det_id}>+</button>
+									<button type="button" className="btn font-weight-bold dblue-bg-color green-t-color align-self-center" data-toggle="collapse" data-target={"#"+dev_det_id}>{device.name}@dev{device.id}</button>
+									<span className="opac">Opac</span>
 								</p>
-								<p className="d-flex justify-content-between mx-md-3">
-									<span className="text-info font-weight-bold">Address:</span>
-									<span className="font-weight-bold">{device.ip_addr}</span>
-								</p>
-								<p className="d-flex justify-content-between mx-md-3">
-									<span className="text-info font-weight-bold">Commands:</span>
-									<span className="text-warning font-weight-bold">{device.commands}</span>
-								</p>
-								<p className="d-flex justify-content-between mx-md-3">
-									<span className="text-info font-weight-bold">Current value:</span>
-									<span className="text-danger font-weight-bold">{device.value}</span>
-								</p>
+								<div id={dev_det_id} className="collapse py-md-3 orange-bg-color">
+									<div className="d-flex flex-column">
+										<p className="d-flex justify-content-between mx-md-3">
+											<span className="text-dark font-weight-bold">Description:</span>
+											<span className="text-dark font-weight-bold">{device.info}</span>
+										</p>
+										<p className="d-flex justify-content-between mx-md-3">
+											<span className="text-dark font-weight-bold">Address:</span>
+											<span className="text-dark font-weight-bold">{device.ip_addr}</span>
+										</p>
+										<p className="d-flex justify-content-between mx-md-3">
+											<span className="text-dark font-weight-bold">Commands:</span>
+											<span className="text-dark font-weight-bold">{device.commands}</span>
+										</p>
+										<p className="d-flex justify-content-between mx-md-3">
+											<span className="text-dark font-weight-bold">Current value:</span>
+											<span className="text-dark font-weight-bold">{device.value}</span>
+										</p>
+										<a className="btn d-inline btn-success text-center font-weight-bold align-self-center" href={"/api/device/"+device.id+"/"}>Details</a>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -96,11 +107,11 @@ class Devices extends React.Component {
 	render() {
 		return (
 			<div className="col-md-6">
-				<div className="card bg-light no-pad-h border rounded card-t-detail">
-					<div className="card-header blue-t-color no-pad-h card-f-header">
+				<div className="card dark-bg-color no-pad-h border rounded card-t-detail">
+					<div className="card-header text-white no-pad-h card-f-header">
 						Available devices
 					</div>
-					<div className="card-body no-pad-h lblue-bg-color">
+					<div className="card-body no-pad-h pt-md-2">
 						{this.renderDeviceList()}
 					</div>
 				</div>
@@ -116,15 +127,15 @@ class Console extends React.Component {
 
 	renderConsole() {
 		return (
-			<p className="card-f-header">Console to be continued soon ...</p>
+			<p className="card-f-header text-white">Console to be continued soon ...</p>
 		)
 	}
 
 	render() {
 		return (
 			<div className="col-md-6">
-				<div className="card bg-light no-pad-h border-success card-t-detail">
-					<div className="card-header blue-t-color no-pad-h card-f-header">
+				<div className="ccard dark-bg-color no-pad-h border rounded card-t-detail">
+					<div className="card-header text-white no-pad-h card-f-header">
 						Console
 					</div>
 					<div className="card-body no-pad-h">

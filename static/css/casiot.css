@@ -4,6 +4,7 @@
 
 body {
 	margin-bottom: 10px;
+	background-color: #048BA8;
 }
 
 .footer {
@@ -44,5 +45,25 @@ body {
 }
 
 .dblue-bg-color {
-	background-color: #001a44;
+	background-color: #2E4057;
+}
+
+.opac {
+	opacity: 0;
+}
+
+.dark-bg-color {
+	background-color: #2F2D2E;
+}
+
+.green-t-color {
+	color: #99C24D;
+}
+
+.green-bg-color {
+	background-color: #99C24D;
+}
+
+.orange-bg-color {
+	background-color: #FDE74C;
 }
