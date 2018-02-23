@@ -7,14 +7,14 @@
 
 
 {% block main_content %}
-<div class="container text-center">
+<div class="container text-center lblue-bg-color">
     <form method="post">
         {% csrf_token %}
         <img src={% static "img/cascoda.png" %} width="75" height="75" class="rounded-circle mb-4" alt="Cascoda">
-        <h1 class="h3 mb-3 font-weight-normal blue-t-color">Please sign in</h1>
+        <h1 class="h3 mb-3 font-weight-normal white-t-color">Please sign in</h1>
         {% for field in form %}
         <div class="form-group d-md-flex justify-content-center">
-            <label class="blue-t-color">{{ field.label }}</label>
+            <label class="white-t-color">{{ field.label }}</label>
             <div class="px-md-3">
                 {{ field }}
                 {% if field.errors %}
@@ -29,7 +29,7 @@
         </div>
         {% endfor %}
         <div class="container d-md-flex justify-content-center">
-            <button type="submit" class="btn btn-primary btn-md btn-block w-50">Login</button>
+            <button type="submit" class="btn blue-bg-color white-t-color btn-md btn-block w-50">Login</button>
         </div>
     </form>
 </div>

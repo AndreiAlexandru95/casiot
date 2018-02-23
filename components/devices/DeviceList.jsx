@@ -2,7 +2,7 @@ import React from 'react'
 import ReactDom from 'react-dom'
 import PropTypes from 'prop-types'
 import Websocket from 'react-websocket'
-
+import styles from '../../static/css/casiot.css'
 
 export default class DeviceList extends React.Component {
 	constructor(props) {
@@ -44,9 +44,10 @@ export default class DeviceList extends React.Component {
 
 	render() {
 		return (
-			<div>
+			<div className="row d-flex">
 				<Websocket ref="socket" url={this.props.socket} onMessage={this.handleData.bind(this)} reconnect={true}/>
 				<Devices device_list={this.state.device_list} />
+				<Console />
 			</div>
 		);
 	}
@@ -63,31 +64,71 @@ class Devices extends React.Component {
 		if (devices.length > 0) {
 			return devices.map(function(device) {
 				return (
-					<div className="text-muted pt-md-3" key={device.id}>
-						<p className="border-bottom border-gray pb-md-3 mb-md-0 white-t-color">
-							<strong className="d-block red-t-color">@{device.id} {device.name}</strong>
-							{device.info} {device.ip_addr} {device.commands} {device.value}
+					<li className="list-group-item" key={device.id}>
+						<p className="d-flex flex-column">
+						<strong className="d-block text-center">{device.name}@dev{device.id}</strong>
+						<span>Info: {device.info}</span>
+						<span>IP: {device.ip_addr}</span>
+						<span>CMD: {device.commands}</span>
+						<span>Current value: {device.value}</span>
 						</p>
-					</div>
+					</li>
 				)
 			}, this)
 		} else {
-			return 
+			return (
+				<p>This account has no devices.</p>
+			)
 		}
 	}
 
 	render() {
 		return (
-			<div className="rounded border box-shadow my-md-3 p-md-3 lblue-bg-color">
-				<h3 className="border-bottom border-gray pb-md-2 mb-md-0 blue-t-color">Available devices</h3>
-				{this.renderDeviceList()}
+			<div className="col-md-6">
+				<div className="card bg-light no-pad-h border-warning">
+					<div className="card-header no-pad-h card-f-header">
+						Available devices
+					</div>
+					<div className="card-body no-pad-h">
+						<ul className= "list-group list-group-flush">
+							{this.renderDeviceList()}
+						</ul>
+					</div>
+				</div>
+			</div>
+		);
+	}
+}
+
+class Console extends React.Component {
+	constructor(props) {
+		super(props)
+	}
+
+	renderConsole() {
+		return (
+			<p className="card-f-header">Console to be continued soon ...</p>
+		)
+	}
+
+	render() {
+		return (
+			<div className="col-md-6">
+				<div className="card bg-light no-pad-h border-success">
+					<div className="card-header no-pad-h card-f-header">
+						Console
+					</div>
+					<div className="card-body no-pad-h card-f-header">
+						{this.renderConsole()}
+					</div>
+				</div>
 			</div>
 		);
 	}
 }
 
 Devices.propTypes = {
-	dev_list: PropTypes.array
+	device_list: PropTypes.array
 }
 
 

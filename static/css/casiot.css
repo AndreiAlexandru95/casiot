@@ -1,9 +1,8 @@
 .navbar {
-    margin-bottom: 20px;
+    margin-bottom: 15px;
 }
 
 body {
-	background-color: #fc7350;
 	margin-bottom: 40px;
 }
 
@@ -15,34 +14,17 @@ body {
 	line-height: 40px;
 }
 
-.red-t-color {
-	color: #fc7350;
-}
-
-.lblue-t-color {
-	color: #30afff;
-}
-
-.white-t-color {
-	color: #fefff7;
-}
-
-.blue-t-color {
-	color: #1c4887;
-}
-
-.red-bg-color {
-	background-color: #fc7350;
-}
-
 .lblue-bg-color {
-	background-color: #30afff;
+	background-color: #e2faff;
 }
 
-.white-bg-color {
-	background-color: #fefff7;
+.no-pad-h {
+	padding-left: 0;
+	padding-right: 0;
 }
 
-.blue-bg-color {
-	background-color: #1c4887;
+.card-f-header {
+	padding-left: 15px;
+	font-weight: bold;
+	font-size: 20px;
 }
