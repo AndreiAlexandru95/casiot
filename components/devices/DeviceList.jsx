@@ -64,13 +64,13 @@ class Devices extends React.Component {
 		if (devices.length > 0) {
 			return devices.map(function(device) {
 				return (
-					<li className="list-group-item" key={device.id}>
+					<li className="list-group-item" key={device.id} id="device_tree">
 						<p className="d-flex flex-column">
-						<strong className="d-block text-center">{device.name}@dev{device.id}</strong>
-						<span>Info: {device.info}</span>
-						<span>IP: {device.ip_addr}</span>
-						<span>CMD: {device.commands}</span>
-						<span>Current value: {device.value}</span>
+						<a className="d-block text-center text-success font-weight-bold" href={"/api/device/"+device.id+"/"}>{device.name}@dev{device.id}</a>
+						<span className="text-info">Info: <span className="black-t-color">{device.info}</span></span>
+						<span className="text-info">IP: <span className="black-t-color">{device.ip_addr}</span></span>
+						<span className="text-info">CMD: <span className="black-t-color">{device.commands}</span></span>
+						<span className="text-info">Current value: <span className="black-t-color">{device.value}</span></span>
 						</p>
 					</li>
 				)
@@ -86,7 +86,7 @@ class Devices extends React.Component {
 		return (
 			<div className="col-md-6">
 				<div className="card bg-light no-pad-h border-warning">
-					<div className="card-header no-pad-h card-f-header">
+					<div className="card-header blue-t-color no-pad-h card-f-header">
 						Available devices
 					</div>
 					<div className="card-body no-pad-h">
@@ -115,7 +115,7 @@ class Console extends React.Component {
 		return (
 			<div className="col-md-6">
 				<div className="card bg-light no-pad-h border-success">
-					<div className="card-header no-pad-h card-f-header">
+					<div className="card-header blue-t-color no-pad-h card-f-header">
 						Console
 					</div>
 					<div className="card-body no-pad-h card-f-header">

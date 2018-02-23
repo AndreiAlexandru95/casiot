@@ -14,10 +14,6 @@ body {
 	line-height: 40px;
 }
 
-.lblue-bg-color {
-	background-color: #e2faff;
-}
-
 .no-pad-h {
 	padding-left: 0;
 	padding-right: 0;
@@ -27,4 +23,12 @@ body {
 	padding-left: 15px;
 	font-weight: bold;
 	font-size: 20px;
+}
+
+.blue-t-color {
+	color: #4286f4;
+}
+
+.black-t-color {
+	color: #000000;
 }
