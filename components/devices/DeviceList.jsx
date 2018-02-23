@@ -37,9 +37,6 @@ export default class DeviceList extends React.Component {
 		let result = JSON.parse(data);
 		console.log(result);
 		this.getDeviceList();
-		this.setState({
-			device_list: result
-		})
 	}
 
 	render() {

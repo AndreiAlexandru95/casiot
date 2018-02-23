@@ -3,6 +3,11 @@ from django.contrib.auth.models import User
 from django.contrib.postgres.fields import ArrayField
 from datetime import datetime
 
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
+
+channel_layer = get_channel_layer()
+
 # Create your models here.
 
 
@@ -52,6 +57,8 @@ class Device(models.Model):
             self.add_log(DeviceLog.DEBUG, 'Device {0} updated to {1}'.format(self, value), current_time)
 
         DeviceChart.objects.create(device=self, value=self.value, date=current_time)
+
+        async_to_sync(channel_layer.group_send)("cas_dev_list", {"type": "dev_list.update"})
 
     def add_log(self, type, text, date):
         return DeviceLog.objects.create(device=self, type=type, text=text, date=date)
