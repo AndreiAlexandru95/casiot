@@ -61,15 +61,29 @@ class Devices extends React.Component {
 		if (devices.length > 0) {
 			return devices.map(function(device) {
 				return (
-					<li className="list-group-item" key={device.id} id="device_tree">
-						<p className="d-flex flex-column">
-						<a className="d-block text-center text-success font-weight-bold" href={"/api/device/"+device.id+"/"}>{device.name}@dev{device.id}</a>
-						<span className="text-info">Info: <span className="black-t-color">{device.info}</span></span>
-						<span className="text-info">IP: <span className="black-t-color">{device.ip_addr}</span></span>
-						<span className="text-info">CMD: <span className="black-t-color">{device.commands}</span></span>
-						<span className="text-info">Current value: <span className="black-t-color">{device.value}</span></span>
-						</p>
-					</li>
+					<div className="card bg-light mb-md-2" key={device.id}>
+						<div className="card-body no-pad-h">
+							<div className="d-flex flex-column">
+								<a className="card-title text-center text-success font-weight-bold border-bottom border-secondary dblue-bg-color" href={"/api/device/"+device.id+"/"}>{device.name}@dev{device.id}</a>
+								<p className="d-flex justify-content-between mx-md-3">
+									<span className="text-info font-weight-bold">Description:</span>
+									<span className="text-muted font-weight-bold">{device.info}</span>
+								</p>
+								<p className="d-flex justify-content-between mx-md-3">
+									<span className="text-info font-weight-bold">Address:</span>
+									<span className="font-weight-bold">{device.ip_addr}</span>
+								</p>
+								<p className="d-flex justify-content-between mx-md-3">
+									<span className="text-info font-weight-bold">Commands:</span>
+									<span className="text-warning font-weight-bold">{device.commands}</span>
+								</p>
+								<p className="d-flex justify-content-between mx-md-3">
+									<span className="text-info font-weight-bold">Current value:</span>
+									<span className="text-danger font-weight-bold">{device.value}</span>
+								</p>
+							</div>
+						</div>
+					</div>
 				)
 			}, this)
 		} else {
@@ -82,14 +96,12 @@ class Devices extends React.Component {
 	render() {
 		return (
 			<div className="col-md-6">
-				<div className="card bg-light no-pad-h border-warning">
+				<div className="card bg-light no-pad-h border rounded card-t-detail">
 					<div className="card-header blue-t-color no-pad-h card-f-header">
 						Available devices
 					</div>
-					<div className="card-body no-pad-h">
-						<ul className= "list-group list-group-flush">
-							{this.renderDeviceList()}
-						</ul>
+					<div className="card-body no-pad-h lblue-bg-color">
+						{this.renderDeviceList()}
 					</div>
 				</div>
 			</div>
@@ -111,11 +123,11 @@ class Console extends React.Component {
 	render() {
 		return (
 			<div className="col-md-6">
-				<div className="card bg-light no-pad-h border-success">
+				<div className="card bg-light no-pad-h border-success card-t-detail">
 					<div className="card-header blue-t-color no-pad-h card-f-header">
 						Console
 					</div>
-					<div className="card-body no-pad-h card-f-header">
+					<div className="card-body no-pad-h">
 						{this.renderConsole()}
 					</div>
 				</div>
