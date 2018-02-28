@@ -25,7 +25,7 @@ SECRET_KEY = '6_r544@$5yytex^)(@j2zxy)(g1t5*p#fmhc@85ddn8lu)^edk'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '192.168.10.254', '[fd14:ac28:a278:1:ba27:ebff:fecd:bb5b]',]
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '192.168.10.254', '[fd14:ac28:a278:1:ba27:ebff:fecd:bb5b]', '192.168.10.201']
 
 # Application definition
 
@@ -41,9 +41,11 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'webpack_loader',
     'interface',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -169,3 +171,6 @@ WEBPACK_LOADER = {
 
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/login/'
+
+# Enable cors for all domains
+CORS_ORIGIN_ALLOW_ALL = True
