@@ -1,0 +1,33 @@
+.col-left {
+	float: left;
+	width: 40%;
+
+}
+
+.col-container {
+	float: left;
+	width: 60%;
+}
+
+.col-center {
+	float: left;
+	width: 60%;
+}
+
+.col-right {
+	float: left;
+	width: 40%;
+}
+
+.col-full {
+	float: left;
+	width: 100%;
+}
+
+.fl-left {
+	float: left;
+}
+
+.fl-right {
+	float: right;
+}

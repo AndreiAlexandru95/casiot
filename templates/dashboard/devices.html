@@ -4,8 +4,12 @@
 
 {% load render_bundle from webpack_loader %}
 
+{% block additional_head %}
+<link rel="stylesheet" href={% static "css/devices.css" %}>
+{% endblock %}
+
 {% block main_content %}
-<div class="container" id="dev_list"></div>
+<div class="row ml-0 cas-cont" id="dev_list"></div>
 {% endblock %}
 
 {% block additional_js %}

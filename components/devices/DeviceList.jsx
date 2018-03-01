@@ -3,6 +3,7 @@ import ReactDom from 'react-dom'
 import PropTypes from 'prop-types'
 import Websocket from 'react-websocket'
 import styles from '../../static/css/casiot.css'
+import sty_dev from '../../static/css/devices.css'
 
 export default class DeviceList extends React.Component {
 	constructor(props) {
@@ -15,7 +16,7 @@ export default class DeviceList extends React.Component {
 	}
 
 	getDeviceList() {
-		this.serverRequest = $.get('http://localhost:8000/api/devices/?format=json', function(result) {
+		this.serverRequest = $.get('http://192.168.10.201:8000/api/devices/?format=json', function(result) {
 			console.log(result);
 			this.setState({
 				device_list: result
@@ -41,7 +42,7 @@ export default class DeviceList extends React.Component {
 
 	render() {
 		return (
-			<div className="row d-flex">
+			<div className="row col-full ml-0">
 				<Websocket ref="socket" url={this.props.socket} onMessage={this.handleData.bind(this)} reconnect={true}/>
 				<Devices device_list={this.state.device_list} />
 				<Console />
@@ -63,37 +64,10 @@ class Devices extends React.Component {
 				let dev_det_id = "dev_det_".concat(device.id.toString());
 
 				return (
-					<div className="card bg-light mb-md-2" key={device.id}>
-						<div className="card-body no-pad-h">
-							<div className="d-flex flex-column">
-								<p className="card-title font-weight-bold border-bottom border-secondary dblue-bg-color mb-md-0 d-flex justify-content-between">
-									<button type="button" className="btn text-white font-weight-bold dblue-bg-color" data-toggle="collapse" data-target={"#"+dev_det_id}>+</button>
-									<button type="button" className="btn font-weight-bold dblue-bg-color green-t-color align-self-center" data-toggle="collapse" data-target={"#"+dev_det_id}>{device.name}@dev{device.id}</button>
-									<span className="opac">Opac</span>
-								</p>
-								<div id={dev_det_id} className="collapse py-md-3 orange-bg-color">
-									<div className="d-flex flex-column">
-										<p className="d-flex justify-content-between mx-md-3">
-											<span className="text-dark font-weight-bold">Description:</span>
-											<span className="text-dark font-weight-bold">{device.info}</span>
-										</p>
-										<p className="d-flex justify-content-between mx-md-3">
-											<span className="text-dark font-weight-bold">Address:</span>
-											<span className="text-dark font-weight-bold">{device.ip_addr}</span>
-										</p>
-										<p className="d-flex justify-content-between mx-md-3">
-											<span className="text-dark font-weight-bold">Commands:</span>
-											<span className="text-dark font-weight-bold">{device.commands}</span>
-										</p>
-										<p className="d-flex justify-content-between mx-md-3">
-											<span className="text-dark font-weight-bold">Current value:</span>
-											<span className="text-dark font-weight-bold">{device.value}</span>
-										</p>
-										<a className="btn d-inline btn-success text-center font-weight-bold align-self-center" href={"/api/device/"+device.id+"/"}>Details</a>
-									</div>
-								</div>
-							</div>
-						</div>
+					<div className="mb-lg-2" key={device.id}>
+						<button type="button" className="btn font-weight-bold lh-bl-bg-color btn-block" data-toggle="collapse" data-target={"#"+dev_det_id}>
+							<img src="../../static/third_party/open-iconic-master/svg/eye.svg" alt="+"/> <span className="text-center">{device.name}@dev{device.id}</span>
+						</button>
 					</div>
 				)
 			}, this)
@@ -104,15 +78,59 @@ class Devices extends React.Component {
 		}
 	}
 
+	renderDeviceDetails() {
+		let devices = this.props.device_list
+
+		if (devices.length > 0) {
+			return devices.map(function(device) {
+				let dev_det_id = "dev_det_".concat(device.id.toString());
+
+				return (
+					<div className="collapse mb-lg-2" key={device.id} id={dev_det_id}>
+						<p className="d-flex justify-content-between mx-md-3">
+							<span className="text-dark font-weight-bold">Name & ID:</span>
+							<span className="text-dark">{device.name}@dev{device.id}</span>
+						</p>
+						<p className="d-flex justify-content-between mx-md-3">
+							<span className="text-dark font-weight-bold">Description:</span>
+							<span className="text-dark">{device.info}</span>
+						</p>
+						<p className="d-flex justify-content-between mx-md-3">
+							<span className="text-dark font-weight-bold">Address:</span>
+							<span className="text-dark">{device.ip_addr}</span>
+						</p>
+						<p className="d-flex justify-content-between mx-md-3">
+							<span className="text-dark font-weight-bold">Commands:</span>
+							<span className="text-dark">{device.commands}</span>
+						</p>
+						<p className="d-flex justify-content-between mx-md-3">
+							<span className="text-dark font-weight-bold">Current value:</span>
+							<span className="text-dark">{device.value}</span>
+						</p>
+						<a className="btn btn-block btn-success text-center font-weight-bold" href={"/api/device/"+device.id+"/"}>Details</a>
+					</div>
+				)
+			}, this)
+		}
+	}
+
 	render() {
 		return (
-			<div className="col-md-6">
-				<div className="card dark-bg-color no-pad-h border rounded card-t-detail">
-					<div className="card-header text-white no-pad-h card-f-header">
-						Available devices
+			<div className="col-container row mx-0">
+				<div className="card wh-bl-bg-color no-pad-h border card-t-detail col-left">
+					<div className="card-header no-pad-h card-f-header">
+						Devices
 					</div>
-					<div className="card-body no-pad-h pt-md-2">
+					<ul className="list-group list-group-flush">
 						{this.renderDeviceList()}
+					</ul>
+				</div>
+				<div className="card lg-bg-color no-pad-h border card-t-detail col-center">
+					<div className="card-header no-pad-h card-f-header">
+						Details
+					</div>
+					<div className="card-body no-pad-h pt-lg-2">
+						{this.renderDeviceDetails()}
 					</div>
 				</div>
 			</div>
@@ -133,9 +151,9 @@ class Console extends React.Component {
 
 	render() {
 		return (
-			<div className="col-md-6">
-				<div className="ccard dark-bg-color no-pad-h border rounded card-t-detail">
-					<div className="card-header text-white no-pad-h card-f-header">
+			<div className="col-right">
+				<div className="card wh-bl-bg-color no-pad-h border card-t-detail">
+					<div className="card-header no-pad-h card-f-header">
 						Console
 					</div>
 					<div className="card-body no-pad-h">
