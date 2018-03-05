@@ -8,11 +8,11 @@
 {% endblock %}
 
 {% block main_content %}
-<div class="row ml-0 cas-cont" id="dev_list"></div>
+<div class="row ml-0 cas-cont" id="dev_ret" data-pk={{pk}}></div>
 {% endblock %}
 
 {% block additional_js %}
 
-    {% render_bundle 'devices' %}
+    {% render_bundle 'device' %}
 
 {% endblock %}

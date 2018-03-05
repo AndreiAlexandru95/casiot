@@ -8,12 +8,12 @@ from django.contrib.auth.models import User
 class DeviceChartSerializer(serializers.ModelSerializer):
     class Meta:
         model = DeviceChart
-        fields = ('value', 'date')
+        fields = ('id', 'value', 'date')
 
 class DeviceLogSerializer(serializers.ModelSerializer):
     class Meta:
         model = DeviceLog
-        fields = ('type', 'text', 'date')
+        fields = ('id', 'type', 'text', 'date')
 
 class DeviceSerializer(serializers.ModelSerializer):
     class Meta:
@@ -25,3 +25,8 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'username', 'device_set')
+
+class ConsoleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DeviceLog
+        fields = ('id', 'device_id', 'type', 'text', 'date')

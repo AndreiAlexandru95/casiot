@@ -6,6 +6,7 @@ module.exports = {
     context: __dirname,
     entry: {
         devices: './components/devices/index',
+        device: './components/device/index',
     },
     output: {
         path: path.resolve('./static/bundles/'),

@@ -51,3 +51,53 @@ body {
 .lg-bg-color {
 	background-color: #b4e1db;
 }
+
+.dg-bg-color {
+	background-color: #77dfd1;
+}
+
+.col-left {
+	float: left;
+	width: 40%;
+
+}
+
+.col-container {
+	float: left;
+	width: 60%;
+}
+
+.col-center {
+	float: left;
+	width: 60%;
+}
+
+.col-right {
+	float: left;
+	width: 40%;
+}
+
+.col-full {
+	float: left;
+	width: 100%;
+}
+
+.fl-left {
+	float: left;
+}
+
+.fl-right {
+	float: right;
+}
+
+.half-height {
+	height: 50%;
+}
+
+.t-s {
+	text-align: start;
+}
+
+.p-t-color {
+	color: #451f9e;
+}

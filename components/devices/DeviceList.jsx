@@ -3,13 +3,13 @@ import ReactDom from 'react-dom'
 import PropTypes from 'prop-types'
 import Websocket from 'react-websocket'
 import styles from '../../static/css/casiot.css'
-import sty_dev from '../../static/css/devices.css'
 
 export default class DeviceList extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			device_list: []
+			device_list: [],
+			logs: []
 		};
 
 		this.sendSocketMessage = this.sendSocketMessage.bind(this);
@@ -17,15 +17,23 @@ export default class DeviceList extends React.Component {
 
 	getDeviceList() {
 		this.serverRequest = $.get('http://192.168.10.201:8000/api/devices/?format=json', function(result) {
-			console.log(result);
 			this.setState({
-				device_list: result
+				device_list: result,
+			});
+		}.bind(this))
+	}
+
+	getLogList() {
+		this.serverRequest = $.get('http://192.168.10.201:8000/api/console/?format=json', function(result) {
+			this.setState({
+				logs: result,
 			});
 		}.bind(this))
 	}
 
 	componentDidMount() {
 		this.getDeviceList();
+		this.getLogList();
 	}
 
 	sendSocketMessage(message){
@@ -38,14 +46,15 @@ export default class DeviceList extends React.Component {
 		let result = JSON.parse(data);
 		console.log(result);
 		this.getDeviceList();
+		this.getLogList();
 	}
 
 	render() {
 		return (
 			<div className="row col-full ml-0">
 				<Websocket ref="socket" url={this.props.socket} onMessage={this.handleData.bind(this)} reconnect={true}/>
-				<Devices device_list={this.state.device_list} />
-				<Console />
+				<Devices device_list={this.state.device_list} current_user={this.props.current_user}/>
+				<Console logs={this.state.logs}/>
 			</div>
 		);
 	}
@@ -66,7 +75,7 @@ class Devices extends React.Component {
 				return (
 					<div className="mb-lg-2" key={device.id}>
 						<button type="button" className="btn font-weight-bold lh-bl-bg-color btn-block" data-toggle="collapse" data-target={"#"+dev_det_id}>
-							<img src="../../static/third_party/open-iconic-master/svg/eye.svg" alt="+"/> <span className="text-center">{device.name}@dev{device.id}</span>
+							<img src="../../static/third_party/open-iconic-master/svg/eye.svg" alt="+"/> <span className="text-center">{this.props.current_user.username}@dev{device.id}</span>
 						</button>
 					</div>
 				)
@@ -89,7 +98,7 @@ class Devices extends React.Component {
 					<div className="collapse mb-lg-2" key={device.id} id={dev_det_id}>
 						<p className="d-flex justify-content-between mx-md-3">
 							<span className="text-dark font-weight-bold">Name & ID:</span>
-							<span className="text-dark">{device.name}@dev{device.id}</span>
+							<span className="text-dark">{device.name} {device.id}</span>
 						</p>
 						<p className="d-flex justify-content-between mx-md-3">
 							<span className="text-dark font-weight-bold">Description:</span>
@@ -107,7 +116,7 @@ class Devices extends React.Component {
 							<span className="text-dark font-weight-bold">Current value:</span>
 							<span className="text-dark">{device.value}</span>
 						</p>
-						<a className="btn btn-block btn-success text-center font-weight-bold" href={"/api/device/"+device.id+"/"}>Details</a>
+						<a className="btn btn-block btn-success text-center font-weight-bold" href={"/device/"+device.id+"/"}>More...</a>
 					</div>
 				)
 			}, this)
@@ -144,9 +153,18 @@ class Console extends React.Component {
 	}
 
 	renderConsole() {
-		return (
-			<p className="card-f-header text-white">Console to be continued soon ...</p>
-		)
+		let logs = this.props.logs
+
+		if (logs.length > 0) {
+			return logs.map(function(log) {
+				let log_key = "log-".concat(log.id.toString());
+				return (
+					<li className="list-group-item" key={log_key}>
+						{log.device_id} {log.type} {log.date} : {log.text}
+					</li>
+				)
+			}, this)
+		}
 	}
 
 	render() {
@@ -156,9 +174,9 @@ class Console extends React.Component {
 					<div className="card-header no-pad-h card-f-header">
 						Console
 					</div>
-					<div className="card-body no-pad-h">
+					<ul className="list-group list-group-flush">
 						{this.renderConsole()}
-					</div>
+					</ul>
 				</div>
 			</div>
 		);
@@ -166,11 +184,16 @@ class Console extends React.Component {
 }
 
 Devices.propTypes = {
-	device_list: PropTypes.array
-}
+	device_list: PropTypes.array,
+	current_user: PropTypes.object
+};
 
 
 DeviceList.propTypes = {
 	current_user: PropTypes.object,
 	socket: PropTypes.string
 };
+
+Console.propTypes = {
+	logs: PropTypes.array
+}

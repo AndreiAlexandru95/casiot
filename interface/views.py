@@ -6,3 +6,6 @@ class HomeView(TemplateView):
 
 class DeviceListView(TemplateView):
 	template_name = 'dashboard/devices.html'
+
+class DeviceRetrieveView(TemplateView):
+	template_name = 'dashboard/device.html'

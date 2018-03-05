@@ -5,7 +5,7 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser
 
 from interface.models import DeviceChart, DeviceLog, Device
 from django.contrib.auth.models import User
-from interface.serializers import DeviceChartSerializer, DeviceLogSerializer, DeviceSerializer, UserSerializer
+from interface.serializers import DeviceChartSerializer, DeviceLogSerializer, DeviceSerializer, UserSerializer, ConsoleSerializer
 from interface.permissions import DevicePermission
 
 from django.shortcuts import get_object_or_404
@@ -94,3 +94,33 @@ class DeviceLogFilterViewSet(generics.ListAPIView):
             return DeviceLog.objects.filter(device_id=self.kwargs["pk"], date__gte=datetime.fromtimestamp(float(self.kwargs["s_date"])), date__lte=datetime.fromtimestamp(float(self.kwargs["e_date"])), type=DeviceLog.ERROR).only('type', 'text', 'date')
         else:
             return DeviceLog.objects.filter(device_id=self.kwargs["pk"], date__gte=datetime.fromtimestamp(float(self.kwargs["s_date"])), date__lte=datetime.fromtimestamp(float(self.kwargs["e_date"]))).only('type', 'text', 'date')
+
+class ConsoleListViewSet(generics.ListAPIView):
+    serializer_class = ConsoleSerializer
+    authentication_classes = (SessionAuthentication, BasicAuthentication)
+    permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self):
+        user = self.request.user
+        logs = DeviceLog.objects.filter(device_id__in=Device.objects.filter(users__id__contains=user.id),).order_by('-date')[:25]
+        return logs
+
+class DeviceLogLViewSet(generics.ListAPIView):
+    serializer_class = DeviceLogSerializer
+    authentication_classes = (SessionAuthentication, BasicAuthentication)
+    permission_classes = (DevicePermission,)
+
+    def get_queryset(self):
+        obj = get_object_or_404(Device.objects.all(), pk=self.kwargs["pk"])
+        self.check_object_permissions(self.request, obj)
+        return DeviceLog.objects.filter(device_id=self.kwargs["pk"]).only('id', 'type', 'text', 'date').order_by('-date')[:50]
+
+class DeviceChartLViewSet(generics.ListAPIView):
+    serializer_class = DeviceChartSerializer
+    authentication_classes = (SessionAuthentication, BasicAuthentication)
+    permission_classes = (DevicePermission,)
+
+    def get_queryset(self):
+        obj = get_object_or_404(Device.objects.all(), pk=self.kwargs["pk"])
+        self.check_object_permissions(self.request, obj)
+        return DeviceChart.objects.filter(device_id=self.kwargs["pk"]).only('id', 'value', 'date').order_by('-date')[:100]
