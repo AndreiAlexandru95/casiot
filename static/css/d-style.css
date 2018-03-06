@@ -1,5 +1,28 @@
-.line {
+.axis {
 	fill: none;
-	stroke: #6F257F;
-	stroke-width: 4px;
+	font-size: 12px;
+	font-family: Arial, Helvetica, sans-serif;
+	font-weight: bold;
+}
+
+.grid line {
+	stroke: lightgrey;
+	stroke-opacity: 0.7;
+	shape-rendering: crispEdges;
+}
+
+.grid path {
+	stroke-width: 0;
+}
+
+circle, .line {
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 3px;
+}
+
+circle {
+  fill: #fff;
+  fill-opacity: .2;
+  cursor: move;
 }

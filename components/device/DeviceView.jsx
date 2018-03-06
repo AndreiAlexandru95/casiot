@@ -189,7 +189,6 @@ class Chart extends React.Component {
 		};
 
 		this.updateDimensions = this.updateDimensions.bind(this);
-
 	}
 
 	updateDimensions() {
@@ -259,6 +258,18 @@ class Chart extends React.Component {
 			let yAxis = d3.axisLeft(y);
 
 			let xheight = height - margin_top - margin_bottom
+			let ywidth = width - margin_left - margin_right
+
+			// Grid the Chart if you want
+
+			// svg.append('g')
+			// 	.attr('class', 'grid')
+			// 	.attr("transform", "translate(0," + xheight + ")")
+			// 	.call(d3.axisBottom(x).ticks(data.length).tickSize(-xheight).tickFormat(""));
+
+			// svg.append('g')
+			// 	.attr('class', 'grid')
+			// 	.call(d3.axisLeft(y).ticks(20).tickSize(-ywidth).tickFormat(""));
 
 			svg.append('g')
 				.attr('class', 'axis')
@@ -273,6 +284,13 @@ class Chart extends React.Component {
 				.datum(data)
 				.attr('class', 'line')
 				.attr('d', line);
+
+			svg.selectAll("dot")
+        		.data(data)
+      			.enter().append("circle")
+        		.attr("r", 2)
+        		.attr("cx", function(d) { return x(d.date); })
+        		.attr("cy", function(d) { return y(d.value); })
 
 		} else {
 			el.textContent = 'Loading...'
