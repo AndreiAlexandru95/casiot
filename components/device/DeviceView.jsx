@@ -178,22 +178,32 @@ class Chart extends React.Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			width: 460,
-			height: 460,
+			width: 0,
+			height: 0,
+			margin: {
+				'left': 50,
+				'right': 20,
+				'bottom': 30,
+				'top': 20,
+			},
 		};
+
 		this.updateDimensions = this.updateDimensions.bind(this);
+
 	}
 
 	updateDimensions() {
-		const el = this.refs.chart;
-		this.setState({
-			width: el.offsetWidth,
-			height: el.offsetHeight
-		});
+
+		if (this.myInput) {
+			this.setState({
+				width: this.myInput.offsetWidth-10,
+				height: this.myInput.offsetHeight-10,
+			})
+		}
 	}
 
 	componentDidMount() {
-		this.updateDimensions();
+		this.updateDimensions()
 		window.addEventListener("resize", this.updateDimensions);
 	}
 
@@ -201,19 +211,74 @@ class Chart extends React.Component {
 		window.removeEventListener("resize", this.updateDimensions);
 	}
 
-	drawChart() {
-		let data = this.props.chart_data
-
-		let {width, height} = this.state;
+	renderChart() {
 		let el = new ReactFauxDOM.Element('div');
 
-		el.setAttribute("ref","chart");
+		let width = this.state.width
+		let height = this.state.height
+		let margin_left = this.state.margin.left
+		let margin_right = this.state.margin.right
+		let margin_top = this.state.margin.top
+		let margin_bottom = this.state.margin.bottom
 
-		let svg = d3.select(el).append('svg').attr("width", width).attr("height", height);
+		el.style.setProperty('width', width);
+		el.style.setProperty('height', height);
 
-		
+		let data = this.props.chart_data;
 
-		return el.toReact();
+		if (data.length > 0) {
+
+			let svg = d3.select(el).append('svg')
+					.attr('width', width)
+					.attr('height', height)
+				.append('g')
+					.attr('transform', "translate("+ margin_left+","+ margin_top +")")
+			
+			let parseDate = d3.timeParse("%Y-%m-%dT%H:%M:%S.%L");
+			let x = d3.scaleTime().range([0, width-margin_left-margin_right]);
+			let y = d3.scaleLinear().range([height-margin_top-margin_bottom, 0]);
+
+			let line = d3.line()
+				.x(function(d) { return x(d.date); })
+				.y(function(d) { return y(d.value); });
+
+			try {
+				data.forEach(function(d) {
+					d.date = parseDate(d.date.substring(0, d.date.length-4))
+					d.value = d.value
+				});
+			}
+			catch(err) {
+				// Already parsed it. 
+			}
+
+			x.domain(d3.extent(data, function(d) {return d.date}));
+			y.domain(d3.extent(data, function(d) {return d.value}));
+
+			let xAxis = d3.axisBottom(x);
+			let yAxis = d3.axisLeft(y);
+
+			let xheight = height - margin_top - margin_bottom
+
+			svg.append('g')
+				.attr('class', 'axis')
+				.attr("transform", "translate(0," + xheight + ")")
+				.call(xAxis);
+
+			svg.append('g')
+				.attr('class', 'axis')
+				.call(yAxis);
+
+			svg.append('path')
+				.datum(data)
+				.attr('class', 'line')
+				.attr('d', line);
+
+		} else {
+			el.textContent = 'Loading...'
+		}
+
+		return el.toReact()
 	}
 
 	render() {
@@ -222,9 +287,7 @@ class Chart extends React.Component {
 				<div className="card-header no-pad-h card-f-header">
 					Chart
 				</div>
-				<div className="card-body">
-					{this.drawChart()}
-				</div>
+				<div className="card-body no-pad-h card wh-bl-bg-color" ref={input => {this.myInput = input}}>{this.renderChart()}</div>
 			</div>
 		)
 	}
