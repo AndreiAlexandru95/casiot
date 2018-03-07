@@ -87,7 +87,8 @@ export default class LineChart extends React.Component {
 						<g transform="translate(50,20)">
 							<AxisX zoomTransform={zoomTransform} width={this.props.width} height={this.props.height} margin={this.props.margin} data={this.state.data}/>
 							<AxisY zoomTransform={zoomTransform} width={this.props.width} height={this.props.height} margin={this.props.margin} data={this.state.data}/>
-							<Line zoomTransform={zoomTransform} width={this.props.width} height={this.props.height} margin={this.props.margin} data={this.state.data} x={0} y={0}/>
+							<Line zoomTransform={zoomTransform} width={this.props.width} height={this.props.height} margin={this.props.margin} data={this.state.data}/>
+							<Scatterplot zoomTransform={zoomTransform} width={this.props.width} height={this.props.height} margin={this.props.margin} data={this.state.data}/>
 						</g>
 					</svg>
 				</div>
@@ -239,6 +240,54 @@ class Line extends React.Component {
 				<path className="line" d={this.state.line_data}></path>
 			</svg>
 		);
+	}
+}
+
+class Scatterplot extends React.Component {
+	constructor(props) {
+		super(props);
+		this.renderScatter();
+	}
+
+	componentDidMount() {
+		this.renderScatter();
+	}
+
+	componentWillReceiveProps() {
+		this.renderScatter();
+	}
+
+	renderScatter() {
+		var data = this.props.data;
+		var margin = this.props.margin;
+		var height = this.props.height - margin.top - margin.bottom;
+		var width = this.props.width - margin.left - margin.right;
+		var zoomTransform = this.props.zoomTransform;
+
+		this.xScale = d3.scaleTime()
+			.domain(d3.extent(data, function(d) {return d.date;}))
+			.range([0, width]);
+
+		this.yScale = d3.scaleLinear()
+			.domain(d3.extent(data, function(d) {return d.value;}))
+			.range([height, 0]);
+
+		if (zoomTransform) {
+			this.xScale.domain(zoomTransform.rescaleX(this.xScale).domain());
+			this.yScale.domain(zoomTransform.rescaleY(this.yScale).domain());
+		}
+	}
+
+	render() {
+		return(
+			<svg height={this.props.height-this.props.margin.top-this.props.margin.bottom} width={this.props.width}>
+				{this.props.data.map(function(cr_node) {
+					return(
+						<circle cx={this.xScale(cr_node.date)} cy={this.yScale(cr_node.value)} r={3} />
+					)
+				}, this)}
+			</svg>
+		)
 	}
 }
 
