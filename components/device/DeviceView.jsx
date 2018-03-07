@@ -2,8 +2,7 @@ import React from 'react'
 import ReactDom from 'react-dom'
 import PropTypes from 'prop-types'
 import Websocket from 'react-websocket'
-import ReactFauxDOM from 'react-faux-dom'
-import * as d3 from 'd3'
+import LineChart from '../dashboard/LineChart.jsx'
 
 
 export default class DeviceView extends React.Component {
@@ -211,92 +210,7 @@ class Chart extends React.Component {
 	}
 
 	renderChart() {
-		let el = new ReactFauxDOM.Element('div');
-
-		let width = this.state.width
-		let height = this.state.height
-		let margin_left = this.state.margin.left
-		let margin_right = this.state.margin.right
-		let margin_top = this.state.margin.top
-		let margin_bottom = this.state.margin.bottom
-
-		el.style.setProperty('width', width);
-		el.style.setProperty('height', height);
-
-		let data = this.props.chart_data;
-
-		if (data.length > 0) {
-
-			let svg = d3.select(el).append('svg')
-					.attr('width', width)
-					.attr('height', height)
-				.append('g')
-					.attr('transform', "translate("+ margin_left+","+ margin_top +")")
-			
-			let parseDate = d3.timeParse("%Y-%m-%dT%H:%M:%S.%L");
-			let x = d3.scaleTime().range([0, width-margin_left-margin_right]);
-			let y = d3.scaleLinear().range([height-margin_top-margin_bottom, 0]);
-
-			let line = d3.line()
-				.x(function(d) { return x(d.date); })
-				.y(function(d) { return y(d.value); });
-
-			try {
-				data.forEach(function(d) {
-					d.date = parseDate(d.date.substring(0, d.date.length-4))
-					d.value = d.value
-				});
-			}
-			catch(err) {
-				// Already parsed it. 
-			}
-
-			x.domain(d3.extent(data, function(d) {return d.date}));
-			y.domain(d3.extent(data, function(d) {return d.value}));
-
-			let xAxis = d3.axisBottom(x);
-			let yAxis = d3.axisLeft(y);
-
-			let xheight = height - margin_top - margin_bottom
-			let ywidth = width - margin_left - margin_right
-
-			// Grid the Chart if you want
-
-			// svg.append('g')
-			// 	.attr('class', 'grid')
-			// 	.attr("transform", "translate(0," + xheight + ")")
-			// 	.call(d3.axisBottom(x).ticks(data.length).tickSize(-xheight).tickFormat(""));
-
-			// svg.append('g')
-			// 	.attr('class', 'grid')
-			// 	.call(d3.axisLeft(y).ticks(20).tickSize(-ywidth).tickFormat(""));
-
-			svg.append('g')
-				.attr('class', 'axis')
-				.attr("transform", "translate(0," + xheight + ")")
-				.call(xAxis);
-
-			svg.append('g')
-				.attr('class', 'axis')
-				.call(yAxis);
-
-			svg.append('path')
-				.datum(data)
-				.attr('class', 'line')
-				.attr('d', line);
-
-			svg.selectAll("dot")
-        		.data(data)
-      			.enter().append("circle")
-        		.attr("r", 2)
-        		.attr("cx", function(d) { return x(d.date); })
-        		.attr("cy", function(d) { return y(d.value); })
-
-		} else {
-			el.textContent = 'Loading...'
-		}
-
-		return el.toReact()
+		return <LineChart data={this.props.chart_data} width={this.state.width} height={this.state.height} margin={this.state.margin} />
 	}
 
 	render() {
@@ -305,7 +219,7 @@ class Chart extends React.Component {
 				<div className="card-header no-pad-h card-f-header">
 					Chart
 				</div>
-				<div className="card-body no-pad-h card wh-bl-bg-color" ref={input => {this.myInput = input}}>{this.renderChart()}</div>
+				<div id="graphic" className="card-body no-pad-h card wh-bl-bg-color" ref={input => {this.myInput = input}}>{this.renderChart()}</div>
 			</div>
 		)
 	}
