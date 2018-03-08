@@ -3,6 +3,7 @@ import ReactDom from 'react-dom'
 import PropTypes from 'prop-types'
 import Websocket from 'react-websocket'
 import LineChart from '../dashboard/LineChart.jsx'
+import Modal from 'react-responsive-modal'
 
 
 export default class DeviceView extends React.Component {
@@ -72,7 +73,7 @@ export default class DeviceView extends React.Component {
 		return (
 			<div className="row col-full ml-0">
 				<Websocket ref="socket" url={this.props.socket} onMessage={this.handleData.bind(this)} reconnect={true}/>
-				<Details device={this.state.device}/>
+				<Details sendSocketMessage={this.sendSocketMessage} device={this.state.device}/>
 				<div className="col-center wh-bl-bg-color">
 					<Chart chart_data={this.state.chart_data} th_max={this.state.th_max} th_min={this.state.th_min}/>
 					<Log logs={this.state.logs}/>
@@ -85,6 +86,44 @@ export default class DeviceView extends React.Component {
 class Details extends React.Component {
 	constructor(props) {
 		super(props)
+
+		this.state = {
+			open: false,
+			cmd : 'cmd-no',
+			dev_name: '',
+			dev_info: '',
+			dev_timer: 0,
+			dev_th_min: 0,
+			dev_th_max: 0,
+		}
+
+		this.populateComponent.bind(this);
+	}
+
+	componentDidMount() {
+		this.populateComponent();
+
+	}
+
+	componentWillReceiveProps(nextProps) {
+		this.populateComponent(nextProps)
+	}
+
+	populateComponent(newProps) {
+		let device = this.props.device
+		if (newProps) {
+			device = newProps.device
+		}
+
+		if (device) {
+			this.setState({
+				dev_name: device.name,
+				dev_info: device.info,
+				dev_timer: device.timer,
+				dev_th_min: device.th_min,
+				dev_th_max: device.th_max,
+			})
+		}
 	}
 
 	renderCommands() {
@@ -93,13 +132,72 @@ class Details extends React.Component {
 
 			return (
 				<div className="mb-lg-2" key={cmd_key}>
-					<button type="button" className="btn t-s p-t-color font-weight-bold dg-bg-color btn-block">
+					<button data-cmd={cmd_key} onClick={this.onOpenModal.bind(this)} type="button" className="btn t-s p-t-color font-weight-bold dg-bg-color btn-block">
 						<img src="../../static/third_party/open-iconic-master/svg/chevron-right.svg" alt=">"/>
-						<span> {cmd}</span>
+						<span data-cmd={cmd_key}> {cmd}</span>
 					</button>
 				</div>
 			)
 		}, this)
+	}
+
+	onOpenModal(event) {
+		let cmd = event.nativeEvent.target.dataset.cmd
+		console.log(cmd)
+
+		switch (cmd) {
+			case 'cmd-info':
+				break;
+			case 'cmd-timer':
+				break;
+			case 'cmd-th':
+				break;
+			case 'cmd-LED':
+				this.props.sendSocketMessage({
+					command: cmd,
+					id: this.props.device.id,
+				})
+				break;
+			default:
+				cmd = 'cmd-no'
+		}
+
+		this.setState({
+			open: true,
+			cmd: cmd,
+		})
+	}
+
+	onCloseModal(event) {
+		this.setState({
+			open: false,
+		})
+	}
+
+	handleChangeInfo(event) {
+		this.props.sendSocketMessage({
+			command: this.state.cmd,
+			name: this.state.dev_name,
+			info: this.state.dev_info,
+			id: this.props.device.id,
+		})
+	}
+
+	handleChangeTimer(event) {
+		this.props.sendSocketMessage({
+			command: this.state.cmd,
+			timer: this.state.dev_timer,
+			id: this.props.device.id,
+		})
+	}
+
+	handleChangeTh(event) {
+		this.props.sendSocketMessage({
+			command: this.state.cmd,
+			th_min: this.state.dev_th_min,
+			th_max: this.state.dev_th_max,
+			id: this.props.device.id,
+		})
 	}
 
 	render() {
@@ -147,25 +245,106 @@ class Details extends React.Component {
 						</div>
 						<ul className="list-group list-group-flush">
 							<div className="mb-lg-2" key="cmd-ci">
-								<button type="button" className="btn t-s p-t-color font-weight-bold dg-bg-color btn-block align-self-start">
+								<button data-cmd="cmd-info" onClick={this.onOpenModal.bind(this)} type="button" className="btn t-s p-t-color font-weight-bold dg-bg-color btn-block align-self-start">
 									<img src="../../static/third_party/open-iconic-master/svg/chevron-right.svg" alt=">"/>
-									<span> Change Information</span>
+									<span data-cmd="cmd-info" > Change Information</span>
 								</button>
 							</div>
 							<div className="mb-lg-2" key="cmd-ti">
-								<button type="button" className="btn t-s p-t-color font-weight-bold dg-bg-color btn-block">
+								<button data-cmd="cmd-timer" onClick={this.onOpenModal.bind(this)} type="button" className="btn t-s p-t-color font-weight-bold dg-bg-color btn-block">
 									<img src="../../static/third_party/open-iconic-master/svg/chevron-right.svg" alt=">"/>
-									<span> Change Timer</span>
+									<span data-cmd="cmd-timer" > Change Timer</span>
 								</button>
 							</div>
 							<div className="mb-lg-2" key="cmd-th">
-								<button type="button" className="btn t-s p-t-color font-weight-bold dg-bg-color btn-block">
+								<button data-cmd="cmd-th" onClick={this.onOpenModal.bind(this)} type="button" className="btn t-s p-t-color font-weight-bold dg-bg-color btn-block">
 									<img src="../../static/third_party/open-iconic-master/svg/chevron-right.svg" alt=">"/>
-									<span> Change Threshold</span>
+									<span data-cmd="cmd-th" > Change Threshold</span>
 								</button>
 							</div>
 							{this.renderCommands()}
 						</ul>
+						<Modal open={this.state.open} onClose={this.onCloseModal.bind(this)} little>
+							{this.state.cmd ==  'cmd-no' &&
+								<h4 className="p-4">
+									Command Unsuported. please use different command!
+								</h4>
+							}
+							{this.state.cmd ==  'cmd-info' &&
+								<div className="p-4">
+									<h4>Change Information</h4>
+									<hr/>
+									<form onSubmit={this.handleChangeInfo.bind(this)}>
+										<label>
+											Name: 
+											<input type="text" value={this.state.dev_name} onChange={function(event) {
+												this.setState({
+													dev_name: event.target.value
+												})
+											}.bind(this)} />
+										</label>
+										<label>
+											Info: 
+											<input type="text" value={this.state.dev_info} onChange={function(event) {
+												this.setState({
+													dev_info: event.target.value
+												})
+											}.bind(this)} />
+										</label>
+										<input type="submit" value="Submit" />
+									</form>
+								</div>
+							}
+							{this.state.cmd ==  'cmd-timer' &&
+								<div className="p-4">
+									<h4>Change Timer</h4>
+									<hr/>
+									<form onSubmit={this.handleChangeTimer.bind(this)}>
+										<label>
+											Timer(s): 
+											<input type="text" value={this.state.dev_timer} onChange={function(event) {
+												this.setState({
+													dev_timer: event.target.value
+												})
+											}.bind(this)} />
+										</label>
+										<input type="submit" value="Submit" />
+									</form>
+								</div>
+							}
+							{this.state.cmd ==  'cmd-th' &&
+								<div className="p-4">
+									<h4>Change Threshold</h4>
+									<hr/>
+									<form onSubmit={this.handleChangeTh.bind(this)}>
+										<label>
+											Minimum: 
+											<input type="text" value={this.state.dev_th_min} onChange={function(event) {
+												this.setState({
+													dev_th_min: event.target.value
+												})
+											}.bind(this)} />
+										</label>
+										<label>
+											Maximum: 
+											<input type="text" value={this.state.dev_th_max} onChange={function(event) {
+												this.setState({
+													dev_th_max: event.target.value
+												})
+											}.bind(this)} />
+										</label>
+										<input type="submit" value="Submit" />
+									</form>
+								</div>
+							}
+							{this.state.cmd ==  'cmd-LED' &&
+								<div className="p-4">
+									<h4>
+										Command 'LED' sent.
+									</h4>
+								</div>
+							}
+						</Modal>
 					</div>
 				</div>
 			)

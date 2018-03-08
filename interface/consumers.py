@@ -1,4 +1,5 @@
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
+from interface.models import Device
 
 class DeviceConsumer(AsyncJsonWebsocketConsumer):
 	groups = ["cas_dev_list",]
@@ -20,6 +21,50 @@ class DeviceConsumer(AsyncJsonWebsocketConsumer):
 	async def receive_json(self, content):
 		command = content.get("command", None)
 		print(command)
+
+		if command == "cmd-info":
+			dev_id = content.get("id", None)
+			name = content.get("name", None)
+			info = content.get("info", None)
+
+			device = Device.objects.get(id=dev_id)
+
+			if device:
+				device.name = name
+				device.info = info
+				device.save()
+
+		if command == "cmd-timer":
+			dev_id = content.get("id", None)
+			timer = content.get("timer", None)
+
+			device = Device.objects.get(id=dev_id)
+
+			if device:
+				device.timer = timer
+				device.save()
+
+		if command == "cmd-th":
+			dev_id = content.get("id", None)
+			th_min = content.get("th_min", None)
+			th_max = content.get("th_max", None)
+
+			device = Device.objects.get(id=dev_id)
+
+			if device:
+				device.th_min = th_min
+				device.th_max = th_max
+				device.save()
+
+		if command == "cmd-LED":
+			dev_id = content.get("id", None)
+
+			device = Device.objects.get(id=dev_id)
+
+			if device:
+				print("MUST SEND LED COMMAND TO DEVICE")
+				print(device.id)
+
 
 	"""
 	Before ws closes do something

@@ -2,7 +2,6 @@ import React from 'react'
 import ReactDom from 'react-dom'
 import PropTypes from 'prop-types'
 import * as d3 from 'd3'
-import reactToString from 'react-to-string';
 
 export default class LineChart extends React.Component {
 	constructor(props) {
