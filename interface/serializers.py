@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 class DeviceChartSerializer(serializers.ModelSerializer):
     class Meta:
         model = DeviceChart
-        fields = ('date', 'value')
+        fields = ('id', 'date', 'value')
 
 class DeviceLogSerializer(serializers.ModelSerializer):
     class Meta:

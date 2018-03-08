@@ -2,6 +2,7 @@ import React from 'react'
 import ReactDom from 'react-dom'
 import PropTypes from 'prop-types'
 import * as d3 from 'd3'
+import reactToString from 'react-to-string';
 
 export default class LineChart extends React.Component {
 	constructor(props) {
@@ -83,6 +84,7 @@ export default class LineChart extends React.Component {
 			const {zoomTransform} = this.state
 			return(
 				<div id="chart">
+					<div className="tooltip"></div>
 					<svg height={this.props.height} width={this.props.width} ref="svg">
 						<g transform="translate(50,20)">
 							<AxisX zoomTransform={zoomTransform} width={this.props.width} height={this.props.height} margin={this.props.margin} data={this.state.data}/>
@@ -257,6 +259,45 @@ class Scatterplot extends React.Component {
 		this.renderScatter();
 	}
 
+	displayLabel(event) {
+		let node = d3.select(event.target);
+		let date = event.target.dataset.date
+		let value = event.target.dataset.value
+
+		let pageX = event.nativeEvent.offsetX
+		let pageY = event.nativeEvent.offsetY
+
+		node.transition()
+			.attr('r', 10)
+			.duration(250)
+			.ease(d3.easeCubicOut)
+			.on('end', function() {
+				let tooltip = d3.select(".tooltip");
+
+				tooltip.transition(250)
+					.style("opacity", .9);
+
+				tooltip.html(date + "<br/>" + value)
+					.style("left", (pageX) + "px")
+					.style("top", (pageY-30) + "px");
+			});
+	}
+
+	hideLabel(event) {
+		let node = d3.select(event.target);
+
+		node.transition()
+			.attr('r', 3)
+			.duration(250)
+			.ease(d3.easeCubicOut)
+			.on('end', function() {
+				let tooltip = d3.select(".tooltip");
+
+				tooltip.transition(250)
+					.style("opacity", 0);
+			});
+	}
+
 	renderScatter() {
 		var data = this.props.data;
 		var margin = this.props.margin;
@@ -282,9 +323,13 @@ class Scatterplot extends React.Component {
 		return(
 			<svg height={this.props.height-this.props.margin.top-this.props.margin.bottom} width={this.props.width}>
 				{this.props.data.map(function(cr_node) {
+					let key = "circ-".concat(cr_node.id);
+					let ref = "circ-".concat(cr_node.id);
+					let value = cr_node.value.toString()
+					let date = cr_node.date.toString()
 					return(
-						<circle cx={this.xScale(cr_node.date)} cy={this.yScale(cr_node.value)} r={3} />
-					)
+						<circle data-date={date} data-value={value} cx={this.xScale(cr_node.date)} cy={this.yScale(cr_node.value)} r={3} key={key} ref={ref} onMouseOver={this.displayLabel.bind(this)} onMouseOut={this.hideLabel.bind(this)}/>
+					);
 				}, this)}
 			</svg>
 		)
