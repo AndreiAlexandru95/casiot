@@ -11,7 +11,9 @@ export default class DeviceView extends React.Component {
 		this.state = {
 			device: null,
 			logs: [],
-			chart_data: [], 
+			chart_data: [],
+			th_max: 0,
+			th_min: 0, 
 		};
 		this.sendSocketMessage = this.sendSocketMessage.bind(this);
 	}
@@ -21,7 +23,9 @@ export default class DeviceView extends React.Component {
 		
 		this.serverRequest = $.get('http://192.168.10.201:8000/api/device/'+dev_id+'/?format=json', function(result) {
 			this.setState({
-				device: result
+				device: result,
+				th_max: result.th_max,
+				th_min: result.th_min,
 			});
 		}.bind(this))
 	}
@@ -70,7 +74,7 @@ export default class DeviceView extends React.Component {
 				<Websocket ref="socket" url={this.props.socket} onMessage={this.handleData.bind(this)} reconnect={true}/>
 				<Details device={this.state.device}/>
 				<div className="col-center wh-bl-bg-color">
-					<Chart chart_data={this.state.chart_data}/>
+					<Chart chart_data={this.state.chart_data} th_max={this.state.th_max} th_min={this.state.th_min}/>
 					<Log logs={this.state.logs}/>
 				</div>
 			</div>
@@ -210,7 +214,7 @@ class Chart extends React.Component {
 	}
 
 	renderChart() {
-		return <LineChart data={this.props.chart_data} width={this.state.width} height={this.state.height} margin={this.state.margin} />
+		return <LineChart data={this.props.chart_data} width={this.state.width} height={this.state.height} margin={this.state.margin} th_max={this.props.th_max} th_min={this.props.th_min}/>
 	}
 
 	render() {

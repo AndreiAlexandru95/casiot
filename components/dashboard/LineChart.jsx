@@ -89,7 +89,7 @@ export default class LineChart extends React.Component {
 						<g transform="translate(50,20)">
 							<AxisX zoomTransform={zoomTransform} width={this.props.width} height={this.props.height} margin={this.props.margin} data={this.state.data}/>
 							<AxisY zoomTransform={zoomTransform} width={this.props.width} height={this.props.height} margin={this.props.margin} data={this.state.data}/>
-							<Line zoomTransform={zoomTransform} width={this.props.width} height={this.props.height} margin={this.props.margin} data={this.state.data}/>
+							<Line zoomTransform={zoomTransform} width={this.props.width} height={this.props.height} margin={this.props.margin} data={this.state.data} th_max={this.props.th_max} th_min={this.props.th_min}/>
 							<Scatterplot zoomTransform={zoomTransform} width={this.props.width} height={this.props.height} margin={this.props.margin} data={this.state.data}/>
 						</g>
 					</svg>
@@ -139,7 +139,7 @@ class AxisX extends React.Component {
 
 	render() {
 		return (
-			<g className="axis--x"></g>
+			<g className="axis axis--x"></g>
 		);
 	}
 }
@@ -181,7 +181,7 @@ class AxisY extends React.Component {
 
 	render() {
 		return (
-			<g className="axis--y"></g>
+			<g className="axis axis--y"></g>
 		);
 	}
 }
@@ -190,7 +190,9 @@ class Line extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			line_data: []
+			line_data: [],
+			th_min_data: [],
+			th_max_data: [],
 		}
 	}
 
@@ -208,6 +210,8 @@ class Line extends React.Component {
 		var height = this.props.height - margin.top - margin.bottom;
 		var width = this.props.width - margin.left - margin.right;
 		var zoomTransform = this.props.zoomTransform;
+		var th_min = this.props.th_min;
+		var th_max = this.props.th_max;
 
 		var x = d3.scaleTime()
 			.range([0, width]);
@@ -229,17 +233,32 @@ class Line extends React.Component {
 			y.domain(zoomTransform.rescaleY(y).domain());
 		}
 
-		var newLine = line(data);
+		var newLine = line(data)
+
+		var th_min_line = d3.line()
+			.x(function(d) {return x(d.date);})
+			.y(function(d) {return y(th_min);})
+
+		var th_max_line = d3.line()
+			.x(function(d) {return x(d.date);})
+			.y(function(d) {return y(th_max);})
+
+		var th_min_data = th_min_line(data)
+		var th_max_data = th_max_line(data)
 
 		this.setState({
-			line_data: newLine
+			line_data: newLine,
+			th_min_data: th_min_data,
+			th_max_data: th_max_data,
 		})
 	}
 
 	render() {
 		return(
 			<svg height={this.props.height-this.props.margin.top-this.props.margin.bottom} width={this.props.width}>
-				<path className="line" d={this.state.line_data}></path>
+				<path className="chart-line" d={this.state.line_data}></path>
+				<path className="th-line" d={this.state.th_min_data}></path>
+				<path className="th-line" d={this.state.th_max_data}></path>
 			</svg>
 		);
 	}
@@ -325,11 +344,13 @@ class Scatterplot extends React.Component {
 				{this.props.data.map(function(cr_node) {
 					let key = "circ-".concat(cr_node.id);
 					let ref = "circ-".concat(cr_node.id);
-					let value = cr_node.value.toString()
-					let date = cr_node.date.toString()
+					let value = cr_node.value.toString();
+					let date = cr_node.date.toString();
+
 					return(
-						<circle data-date={date} data-value={value} cx={this.xScale(cr_node.date)} cy={this.yScale(cr_node.value)} r={3} key={key} ref={ref} onMouseOver={this.displayLabel.bind(this)} onMouseOut={this.hideLabel.bind(this)}/>
+						<circle data-date={date} data-value={value} cx={this.xScale(cr_node.date)} cy={this.yScale(cr_node.value)} r={4} key={key} ref={ref} onMouseOver={this.displayLabel.bind(this)} onMouseOut={this.hideLabel.bind(this)}/>
 					);
+
 				}, this)}
 			</svg>
 		)

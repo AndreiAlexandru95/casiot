@@ -18,18 +18,11 @@
 circle, .line {
   fill: none;
   stroke: steelblue;
-  stroke-width: 3px;
+  stroke-width: 6px;
 }
 
 circle {
-  fill: #fff;
-  fill-opacity: .2;
-  cursor: move;
-}
-
-.overlay {
-	fill: none;
-	pointer-events: all;
+  fill: steelblue;
 }
 
 .tooltip {
@@ -37,4 +30,16 @@ circle {
 	color: #451f9e; 
 	padding: 10px;
 	margin-left: 20px;
+}
+
+.chart-line {
+	fill: none;
+	stroke: steelblue;
+	stroke-width: 3px;
+}
+
+.th-line {
+	fill: none;
+	stroke: red;
+	stroke-width: 3px;
 }
