@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% load render_bundle from webpack_loader %}
+
+{% block additional_head %}
+{% endblock %}
+
+{% block main_content %}
+<div id="chart_list"></div>
+{% endblock %}
+
+{% block additional_js %}
+
+    {% render_bundle 'charts' %}
+
+{% endblock %}

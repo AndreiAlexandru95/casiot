@@ -1,5 +1,5 @@
 from django.urls import path
-from interface.views import HomeView, DeviceListView, DeviceRetrieveView
+from interface.views import HomeView, DeviceListView, DeviceRetrieveView, LogListView, ChartListView
 from interface.api_views import DeviceChartViewSet, DeviceLogViewSet, UserViewSet, DeviceDetailViewSet, DeviceListViewSet, DeviceChartFilterViewSet, DeviceLogFilterViewSet, ConsoleListViewSet, DeviceLogLViewSet, DeviceChartLViewSet
 
 
@@ -7,6 +7,8 @@ urlpatterns = [
     path('', HomeView.as_view()),
     path('devices/', DeviceListView.as_view()),
     path('device/<pk>/', DeviceRetrieveView.as_view()),
+    path('logs/', LogListView.as_view()),
+    path('charts/', ChartListView.as_view()),
 
     path('api/device-chart/<pk>/', DeviceChartViewSet.as_view()),
     path('api/device-log/<pk>/', DeviceLogViewSet.as_view()),

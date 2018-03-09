@@ -347,7 +347,7 @@ class Scatterplot extends React.Component {
 					let date = cr_node.date.toString();
 
 					return(
-						<circle data-date={date} data-value={value} cx={this.xScale(cr_node.date)} cy={this.yScale(cr_node.value)} r={4} key={key} ref={ref} onMouseOver={this.displayLabel.bind(this)} onMouseOut={this.hideLabel.bind(this)}/>
+						<circle data-date={date} data-value={value} cx={this.xScale(cr_node.date)} cy={this.yScale(cr_node.value)} r={2} key={key} ref={ref} onMouseOver={this.displayLabel.bind(this)} onMouseOut={this.hideLabel.bind(this)}/>
 					);
 
 				}, this)}

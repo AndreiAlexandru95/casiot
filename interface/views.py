@@ -9,3 +9,9 @@ class DeviceListView(TemplateView):
 
 class DeviceRetrieveView(TemplateView):
 	template_name = 'dashboard/device.html'
+
+class LogListView(TemplateView):
+	template_name = 'dashboard/logs.html'
+
+class ChartListView(TemplateView):
+	template_name = 'dashboard/charts.html'
