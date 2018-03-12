@@ -22,7 +22,7 @@ class DeviceConsumer(AsyncJsonWebsocketConsumer):
 		command = content.get("command", None)
 		print(command)
 
-		if command == "cmd-info":
+		if command == "cmd-ci":
 			dev_id = content.get("id", None)
 			name = content.get("name", None)
 			info = content.get("info", None)
@@ -34,7 +34,7 @@ class DeviceConsumer(AsyncJsonWebsocketConsumer):
 				device.info = info
 				device.save()
 
-		if command == "cmd-timer":
+		if command == "cmd-ti":
 			dev_id = content.get("id", None)
 			timer = content.get("timer", None)
 

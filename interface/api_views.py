@@ -123,4 +123,4 @@ class DeviceChartLViewSet(generics.ListAPIView):
     def get_queryset(self):
         obj = get_object_or_404(Device.objects.all(), pk=self.kwargs["pk"])
         self.check_object_permissions(self.request, obj)
-        return DeviceChart.objects.filter(device_id=self.kwargs["pk"]).only('id', 'value', 'date').order_by('-date')
+        return DeviceChart.objects.filter(device_id=self.kwargs["pk"]).only('id', 'value', 'date').order_by('-date')[:100]

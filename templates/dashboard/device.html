@@ -1,15 +1,10 @@
 {% extends "base.html" %}
 
-{% load static %}
-
 {% load render_bundle from webpack_loader %}
 
-{% block additional_head %}
-<link rel="stylesheet" href={% static "css/d-style.css" %}>
-{% endblock %}
-
 {% block main_content %}
-<div class="row ml-0 cas-cont" id="dev_ret" data-pk={{pk}}></div>
+	<div class="container dashboard-container" id="dev_ret" data-pk={{pk}}>
+	</div>	
 {% endblock %}
 
 {% block additional_js %}

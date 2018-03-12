@@ -1,8 +1,8 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="utf-8">
+	<meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="Cascoda - Open Thread - Demo">
     <meta name="author" content="Andrei Alexandru">
@@ -11,12 +11,12 @@
     <link rel="stylesheet" href={% static "third_party/bootstrap/css/bootstrap.css" %}>
 
     <!-- Custom Style -->
-    <link rel="stylesheet" href={% static "css/casiot.css" %}>
+    <link rel="stylesheet" href={% static "css/base.css" %}>
     {% block additional_head %}
     {% endblock %}
 </head>
 <body>
-    <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
+	<nav class="navbar fixed-top navbar-expand navbar-dark bg-dark">
         <a class="navbar-brand" href="https://www.cascoda.com/">
             <img src={% static "img/cascoda.png" %} width="40" height="40" class="rounded-circle" alt="Cascoda">
         </a>
@@ -58,11 +58,10 @@
     <!-- Main Content -->
     {% block main_content %}
     {% endblock %}
-
     <!-- Footer Content -->
     <footer class="footer">
         <div class="container text-center">
-            <span class="text-white">&copy; <a class="text-white" href="https://www.cascoda.com/">CASCODA LTD.</a> 2018</span>
+            <span class="text-muted">&copy; <a class="text-muted"href="https://www.cascoda.com/">CASCODA LTD.</a> 2018</span>
         </div> 
     </footer>
 
