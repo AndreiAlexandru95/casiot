@@ -16,6 +16,8 @@ export default class LineChart extends React.Component {
 			zoomTransform: null,
 			tip_content: '',
 			socket: 'ws://'+window.location.host+'/devices/',
+			th_min: 0,
+			th_max: 0,
 		}
 
 		this.zoom = d3.zoom()
@@ -23,9 +25,18 @@ export default class LineChart extends React.Component {
 	}
 
 	getData() {
-		this.serverRequest = $.get('http://localhost:8000/api/device-chart100/'+this.props.dev_id+'/?format=json', function(result) {
+		this.serverRequest = $.get('http://192.168.10.201:8000/api/device-chart100/'+this.props.dev_id+'/?format=json', function(result) {
 			this.setState({
 				data: result,
+			});
+		}.bind(this))
+	}
+
+	getThresholds() {
+		this.serverRequest = $.get('http://192.168.10.201:8000/api/device/'+this.props.dev_id+'/?format=json', function(result) {
+			this.setState({
+				th_min: result.th_min,
+				th_max: result.th_max,
 			});
 		}.bind(this))
 	}
@@ -40,6 +51,7 @@ export default class LineChart extends React.Component {
 		d3.select(this.refs.svg)
 			.call(this.zoom)
 		this.getData()
+		this.getThresholds()
 	}
 
 	componentDidUpdate() {
@@ -50,7 +62,7 @@ export default class LineChart extends React.Component {
 	displayTip(d) {
 		this.setState({
 			tip_style: {
-				top: d3.event.offsetY+30,
+				top: d3.event.offsetY+50,
 				left: d3.event.offsetX+5,
 				opacity: 0.8,
 				backgroundColor: '#77dfd1',
@@ -68,6 +80,8 @@ export default class LineChart extends React.Component {
 
 	renderLineChart() {
 		var data = this.state.data
+		var th_min = this.state.th_min
+		var th_max = this.state.th_max
 		if (data.length > 0) {
 			var margin = {
 				top: 20,
@@ -92,6 +106,14 @@ export default class LineChart extends React.Component {
 			var line = d3.line()
 				.x(function(d) {return x(d.date)})
 				.y(function(d) {return y(d.value)})
+
+			var min_line = d3.line()
+				.x(function(d) {return x(d.date)})
+				.y(function(d) {return y(th_min)}) 
+
+			var max_line = d3.line()
+				.x(function(d) {return x(d.date)})
+				.y(function(d) {return y(th_max)})
 
 			var parent = ReactFauxDOM.createElement('div')
 			var node = ReactFauxDOM.createElement('svg')
@@ -138,13 +160,23 @@ export default class LineChart extends React.Component {
 	    		.attr('class', 'y axis')
 	    		.call(yAxis)
 
-	    	svg.append('svg')
+	    	var linesvg = svg.append('svg')
 	    			.attr('width', width)
 	    			.attr('height', height)
-	    		.append('path')
+	    		
+	    	linesvg.append('path')
 	    			.datum(data)
 	    			.attr('class', 'line')
 	    			.attr('d', line)
+
+	    	linesvg.append('path')
+	    			.datum(data)
+	    			.attr('class', 'th-line')
+	    			.attr('d', min_line)
+	    	linesvg.append('path')
+	    			.datum(data)
+	    			.attr('class', 'th-line')
+	    			.attr('d', max_line)
 
 	    	svg.append('svg')
 	    			.attr('width', width)
@@ -163,7 +195,7 @@ export default class LineChart extends React.Component {
 	    	return parent.toReact()
     	} else {
     		return(
-    			<div>Salut</div>
+    			<div className="info-font">Loading...</div>
     		)
     	}
 	}
@@ -173,6 +205,7 @@ export default class LineChart extends React.Component {
 		d3.select(this.refs.svg)
 			.call(this.zoom)
 		this.getData()
+		this.getThresholds()
 	}
 
 	render() {

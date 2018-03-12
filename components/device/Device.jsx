@@ -4,6 +4,8 @@ import PropTypes from 'prop-types'
 import Websocket from 'react-websocket'
 import Modal from 'react-responsive-modal'
 import LineChart from '../dashboard/LineChart.jsx'
+import BarChart from '../dashboard/BarChart.jsx'
+import {CSVLink, CSVDownload} from 'react-csv'
 
 export default class Device extends React.Component {
 	constructor(props) {
@@ -14,14 +16,25 @@ export default class Device extends React.Component {
 			th_min: 0,
 			logs: [],
 			socket: null,
+			chart: [],
+			d_logs: [],
 		}
 
 		this.sendSocketMessage = this.sendSocketMessage.bind(this);
 	}
 
+	getChartData() {
+		var dev_id = $("#dev_ret").data("pk")
+		this.serverRequest = $.get('http://192.168.10.201:8000/api/device-chart/'+dev_id+'/?format=json', function(result) {
+			this.setState({
+				chart: result,
+			});
+		}.bind(this))
+	}
+
 	getDeviceDetails() {
 		var dev_id = $("#dev_ret").data("pk")
-		this.serverRequest = $.get('http://localhost:8000/api/device/'+dev_id+'/?format=json', function(result) {
+		this.serverRequest = $.get('http://192.168.10.201:8000/api/device/'+dev_id+'/?format=json', function(result) {
 			this.setState({
 				device: result,
 				th_max: result.th_max,
@@ -32,9 +45,18 @@ export default class Device extends React.Component {
 
 	getDeviceLogs() {
 		var dev_id = $("#dev_ret").data("pk");
-		this.serverRequest = $.get('http://localhost:8000/api/device-log50/'+dev_id+'/?format=json', function(result) {
+		this.serverRequest = $.get('http://192.168.10.201:8000/api/device-log50/'+dev_id+'/?format=json', function(result) {
 			this.setState({
 				logs: result
+			});
+		}.bind(this))
+	}
+
+	getLogData() {
+		var dev_id = $("#dev_ret").data("pk");
+		this.serverRequest = $.get('http://192.168.10.201:8000/api/device-log/'+dev_id+'/?format=json', function(result) {
+			this.setState({
+				d_logs: result
 			});
 		}.bind(this))
 	}
@@ -42,6 +64,8 @@ export default class Device extends React.Component {
 	componentDidMount() {
 		this.getDeviceDetails()
 		this.getDeviceLogs()
+		this.getChartData()
+		this.getLogData()
 		this.setState({
 			socket: this.refs.socket
 		});
@@ -51,6 +75,8 @@ export default class Device extends React.Component {
 		let result = JSON.parse(data)
 		this.getDeviceDetails()
 		this.getDeviceLogs()
+		this.getChartData()
+		this.getLogData()
 	}
 
 	sendSocketMessage(message) {
@@ -61,24 +87,40 @@ export default class Device extends React.Component {
 	}
 
 	render() {
+		console.log(this.state.chart)
+		console.log(this.state.d_logs)
 		return (
 			<div className="row d-size m-0">
 				<Websocket ref="socket" url={this.props.socket} onMessage={this.handleData.bind(this)} reconnect={true}/>
 				<Panel sendSocketMessage={this.sendSocketMessage} device={this.state.device} />
 				<div className="col-6 p-0">
 					<div className="card border cb-bg-color p-0 m-height">
-						<div className="card-header card-head-font">
-							Chart
+						<div className="card-header card-head-font d-flex justify-content-between h-height p-2">
+							<div className="p-2">
+								Chart
+							</div>
+							{this.state.chart.length > 0 &&
+								<CSVLink data={this.state.chart} className="btn btn-block btn-success b-t-font dw-width">
+									<img src="../../static/third_party/open-iconic-master/svg/data-transfer-download.svg" alt="+"/> <span className="text-center">Download</span>
+								</CSVLink>
+							}
 						</div>
-						<div className="card-body p-0">
+						<div className="card-body p-0 b-l-height">
 							<Chart device={this.state.device}/>
 						</div>
 					</div>
 					<div className="card border gy-bg-color p-0 l-height">
-						<div className="card-header card-head-font">
-							Log
+						<div className="card-header card-head-font d-flex justify-content-between h-height p-2">
+							<div className="p-2">
+								Log
+							</div>
+							{this.state.d_logs.length > 0 &&
+								<CSVLink data={this.state.d_logs} className="btn btn-block btn-success b-t-font dw-width">
+									<img src="../../static/third_party/open-iconic-master/svg/data-transfer-download.svg" alt="+"/> <span className="text-center">Download</span>
+								</CSVLink>
+							}
 						</div>
-						<div className="card-body add-scroll py-1">
+						<div className="card-body add-scroll py-1 b-height">
 							<Log logs={this.state.logs}/>
 						</div>
 					</div>
@@ -449,7 +491,7 @@ class Chart extends React.Component {
 					<LineChart dev_id={this.props.device.id}/>
 				}
 				{this.state.chart_sw == 1 && this.props.device &&
-					<div>Bar</div>
+					<BarChart dev_id={this.props.device.id}/>
 				}
 			</div>
 		)

@@ -1,5 +1,6 @@
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
 from interface.models import Device
+from django.contrib.auth.models import User
 
 class DeviceConsumer(AsyncJsonWebsocketConsumer):
 	groups = ["cas_dev_list",]
@@ -64,6 +65,17 @@ class DeviceConsumer(AsyncJsonWebsocketConsumer):
 			if device:
 				print("MUST SEND LED COMMAND TO DEVICE")
 				print(device.id)
+
+		if command == "cmd-sn":
+			dev_key = content.get("dev_key", None)
+			signer = content.get("user", None)
+
+			print(dev_key)
+			print(signer)
+
+			device = Device.objects.get(dev_key=dev_key)
+			user = User.objects.get(username=signer)
+			device.sign_device(user)
 
 
 	"""

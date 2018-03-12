@@ -133,3 +133,33 @@ body {
 circle {
   fill: rgb(142, 230, 160);
 }
+
+.dw-width {
+	width: 140px;
+	max-width: 140px;
+}
+
+.h-height {
+	height: 55px;
+	max-height: 55px;
+}
+
+.b-height {
+	height: 243px;
+	max-height: 243px;
+}
+
+.b-l-height {
+	height: 443px;
+	max-height: 443px;
+}
+
+.th-line {
+	fill: none;
+	stroke: rgba(255, 0, 0, 0.6);
+	stroke-width: 3px;
+}
+
+.bar-rect {
+	fill: rgba(0, 255, 10, 0.5);
+}

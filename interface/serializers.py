@@ -30,3 +30,8 @@ class ConsoleSerializer(serializers.ModelSerializer):
     class Meta:
         model = DeviceLog
         fields = ('id', 'device_id', 'type', 'text', 'date')
+
+class AvgSerializer(serializers.Serializer):
+        day = serializers.DateTimeField()
+        avg_val = serializers.FloatField()
+
