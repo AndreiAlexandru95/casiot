@@ -5,12 +5,12 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser
 
 from interface.models import DeviceChart, DeviceLog, Device
 from django.contrib.auth.models import User
-from interface.serializers import DeviceChartSerializer, DeviceLogSerializer, DeviceSerializer, UserSerializer, ConsoleSerializer, AvgSerializer
+from interface.serializers import DeviceChartSerializer, DeviceLogSerializer, DeviceSerializer, UserSerializer, ConsoleSerializer, AvgSerializer, DeviceMultiChartSerializer
 from interface.permissions import DevicePermission
 
 from django.shortcuts import get_object_or_404
 import datetime
-from django.db.models import Avg
+from django.db.models import Avg, Subquery, OuterRef
 
 class DeviceDetailViewSet(generics.RetrieveAPIView):
     queryset = Device.objects.all()
@@ -149,8 +149,19 @@ class DeviceChartHourlyAvgViewSet(generics.ListAPIView):
         self.check_object_permissions(self.request, obj)
         last_day = datetime.datetime.today() - datetime.timedelta(1)
         queryset = DeviceChart.objects.filter(device_id=self.kwargs["pk"]).filter(date__gte=last_day).extra({"day": "date_trunc('hour', date)"}).values("day").order_by().annotate(avg_val=Avg("value"))
-        print(queryset)
         return queryset
+
+
+class DeviceMultiChartViewSet(generics.ListAPIView):
+    serializer_class = DeviceMultiChartSerializer
+    authentication_classes = (SessionAuthentication, BasicAuthentication)
+    permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self):
+        devices = self.kwargs["pk"]
+        devices = devices.split('-')
+        devices = list(map(int, devices))
+        return DeviceChart.objects.filter(device_id__in=devices).order_by('device_id','-date')
 
 
 

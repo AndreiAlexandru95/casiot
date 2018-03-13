@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% load render_bundle from webpack_loader %}
+
+{% block main_content %}
+	<div class="container dashboard-container" id="dev_charts">
+	</div>	
+{% endblock %}
+
+{% block additional_js %}
+
+    {% render_bundle 'charts' %}
+
+{% endblock %}

@@ -163,3 +163,8 @@ circle {
 .bar-rect {
 	fill: rgba(0, 255, 10, 0.5);
 }
+
+.i-height {
+	height: 240px;
+	max-height: 240px;
+}

@@ -35,3 +35,8 @@ class AvgSerializer(serializers.Serializer):
         day = serializers.DateTimeField()
         avg_val = serializers.FloatField()
 
+class DeviceMultiChartSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DeviceChart
+        fields = ('device_id', 'date', 'value')
+

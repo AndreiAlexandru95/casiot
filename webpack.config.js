@@ -7,6 +7,7 @@ module.exports = {
     entry: {
         devices: './components/devices/index',
         device: './components/device/index',
+        charts: './components/charts/index',
     },
     output: {
         path: path.resolve('./static/bundles/'),

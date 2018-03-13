@@ -1,6 +1,6 @@
 from django.urls import path
 from interface.views import HomeView, DeviceListView, DeviceRetrieveView, LogListView, ChartListView
-from interface.api_views import DeviceChartViewSet, DeviceLogViewSet, UserViewSet, DeviceDetailViewSet, DeviceListViewSet, DeviceChartFilterViewSet, DeviceLogFilterViewSet, ConsoleListViewSet, DeviceLogLViewSet, DeviceChartLViewSet, DeviceChartDailyAvgViewSet, DeviceChartHourlyAvgViewSet
+from interface.api_views import DeviceChartViewSet, DeviceLogViewSet, UserViewSet, DeviceDetailViewSet, DeviceListViewSet, DeviceChartFilterViewSet, DeviceLogFilterViewSet, ConsoleListViewSet, DeviceLogLViewSet, DeviceChartLViewSet, DeviceChartDailyAvgViewSet, DeviceChartHourlyAvgViewSet, DeviceMultiChartViewSet
 
 
 urlpatterns = [
@@ -21,5 +21,7 @@ urlpatterns = [
     path('api/device-log50/<pk>/', DeviceLogLViewSet.as_view()),
     path('api/device-chart100/<pk>/', DeviceChartLViewSet.as_view()),
     path('api/device-avgd/<pk>/', DeviceChartDailyAvgViewSet.as_view()),
-    path('api/device-avgh/<pk>/', DeviceChartHourlyAvgViewSet.as_view(),)
+    path('api/device-avgh/<pk>/', DeviceChartHourlyAvgViewSet.as_view()),
+    path('api/devices-chart/<pk>/', DeviceMultiChartViewSet.as_view()),
+
 ]
