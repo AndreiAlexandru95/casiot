@@ -12,7 +12,6 @@ export default class MultiLineChart extends React.Component {
 		this.state = {
 			data: [],
 			zoomTransfrom: null,
-			socket: 'ws://'+window.location.host+'/devices/',
 		}
 
 		this.zoom = d3.zoom()
@@ -35,7 +34,6 @@ export default class MultiLineChart extends React.Component {
 		devices = devices.map(String)
 		devices = devices.toString()
 		devices = devices.replace(",", "-")
-		console.log(devices)
 		if (devices != '') {
 			this.serverReqiest = $.get('http://192.168.10.201:8000/api/devices-chart/'+devices+'/?format=json', function(result) {
 				this.setState({
@@ -62,13 +60,6 @@ export default class MultiLineChart extends React.Component {
 	componentDidUpdate() {
 		d3.select(this.refs.svg)
 			.call(this.zoom)
-	}
-
-	handleData(data) {
-		let result = JSON.parse(data)
-		d3.select(this.refs.svg)
-			.call(this.zoom)
-		this.getData()
 	}
 
 	renderMultiLineChart() {
@@ -135,10 +126,7 @@ export default class MultiLineChart extends React.Component {
 	    			.attr('width', width)
 	    			.attr('height', height)
 
-	    	console.log(dataNest)
-
 	    	dataNest.forEach(function(d) {
-	    		console.log(d)
 	    		linesvg.append("path")
 	    			.attr("class", "line")
 	    			.style("stroke", function() {
@@ -164,10 +152,8 @@ export default class MultiLineChart extends React.Component {
 	}
 
 	render() {
-		console.log(this.state.data)
 		return(
 			<div>
-				<Websocket ref="socket" url={this.state.socket} onMessage={this.handleData.bind(this)} reconnect={true}/>
 				{this.renderMultiLineChart()}
 			</div>
 		)

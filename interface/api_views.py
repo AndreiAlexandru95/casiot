@@ -5,7 +5,7 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser
 
 from interface.models import DeviceChart, DeviceLog, Device
 from django.contrib.auth.models import User
-from interface.serializers import DeviceChartSerializer, DeviceLogSerializer, DeviceSerializer, UserSerializer, ConsoleSerializer, AvgSerializer, DeviceMultiChartSerializer
+from interface.serializers import DeviceChartSerializer, DeviceLogSerializer, DeviceSerializer, UserSerializer, ConsoleSerializer, AvgSerializer, DeviceMultiChartSerializer, MultiAvgSerializer
 from interface.permissions import DevicePermission
 
 from django.shortcuts import get_object_or_404
@@ -151,7 +151,6 @@ class DeviceChartHourlyAvgViewSet(generics.ListAPIView):
         queryset = DeviceChart.objects.filter(device_id=self.kwargs["pk"]).filter(date__gte=last_day).extra({"day": "date_trunc('hour', date)"}).values("day").order_by().annotate(avg_val=Avg("value"))
         return queryset
 
-
 class DeviceMultiChartViewSet(generics.ListAPIView):
     serializer_class = DeviceMultiChartSerializer
     authentication_classes = (SessionAuthentication, BasicAuthentication)
@@ -163,6 +162,27 @@ class DeviceMultiChartViewSet(generics.ListAPIView):
         devices = list(map(int, devices))
         return DeviceChart.objects.filter(device_id__in=devices).order_by('device_id','-date')
 
+class DeviceMultiChartHViewSet(generics.ListAPIView):
+    serializer_class = MultiAvgSerializer
+    authentication_classes = (SessionAuthentication, BasicAuthentication)
+    permission_classes = (IsAuthenticated,)
 
+    def get_queryset(self):
+        devices = self.kwargs["pk"]
+        devices = devices.split('-')
+        devices = list(map(int, devices))
+        queryset = DeviceChart.objects.filter(device_id__in=devices).extra({"day": "date_trunc('hour', date)"}).values("day", "device_id").order_by("day").annotate(avg_val=Avg("value"))
+        return queryset
 
+class DeviceMultiChartDViewSet(generics.ListAPIView):
+    serializer_class = MultiAvgSerializer
+    authentication_classes = (SessionAuthentication, BasicAuthentication)
+    permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self):
+        devices = self.kwargs["pk"]
+        devices = devices.split('-')
+        devices = list(map(int, devices))
+        queryset = DeviceChart.objects.filter(device_id__in=devices).extra({"day": "date_trunc('day', date)"}).values("day", "device_id").order_by("day").annotate(avg_val=Avg("value"))
+        return queryset
 

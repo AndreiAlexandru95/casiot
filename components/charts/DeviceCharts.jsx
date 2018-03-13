@@ -3,6 +3,7 @@ import ReactDom from 'react-dom'
 import PropTypes from 'prop-types'
 import Websocket from 'react-websocket'
 import MultiLineChart from '../dashboard/MultiLineChart'
+import MultiBarChart from '../dashboard/MultiBarChart'
 
 export default class DeviceCharts extends React.Component {
 	constructor(props) {
@@ -11,6 +12,9 @@ export default class DeviceCharts extends React.Component {
 		this.state = {
 			device_list: [],
 			compare_dev: [],
+			chart_sw: 0,
+			disable_line: true,
+			disable_bar: false,
 		}
 	}
 
@@ -20,6 +24,22 @@ export default class DeviceCharts extends React.Component {
 				device_list: result,
 			});
 		}.bind(this))
+	}
+
+	handleLineClick() {
+		this.setState({
+			chart_sw: 0	,
+			disable_line: true,
+			disable_bar: false,
+		})
+	}
+
+	handleBarClick() {
+		this.setState({
+			chart_sw: 1,
+			disable_line: false,
+			disable_bar: true,
+		})
 	}
 
 	componentDidMount() {
@@ -79,8 +99,27 @@ export default class DeviceCharts extends React.Component {
 					<div className="card-header card-head-font">
 						Charts
 					</div>
-					<div className="card-body p-0 m-height">
-						<MultiLineChart devices={this.state.compare_dev} width={898} height={466}/>
+					<div className="card-body p-0 ">
+						<div className="chart-tabs">
+							<div className="m-0 row chart-tabs">
+								<div className="col-6 p-0">
+									<button disabled={this.state.disable_line} className="btn btn-block b-tab-font chart-tabs p-0" onClick={this.handleLineClick.bind(this)}>
+										Linear
+									</button>
+								</div>
+								<div className="col-6 p-0">
+									<button disabled={this.state.disable_bar} className="btn btn-block b-tab-font chart-tabs p-0" onClick={this.handleBarClick.bind(this)}>
+										Average
+									</button>
+								</div>
+							</div>
+						</div>
+						{this.state.chart_sw == 0 &&
+							<MultiLineChart devices={this.state.compare_dev} width={898} height={436}/>
+						}
+						{this.state.chart_sw == 1 &&
+							<MultiBarChart devices={this.state.compare_dev} width={698} height={436}/>
+						}
 					</div>
 					<div className="card border p-bg-color">
 						<div className="card-header card-head-font">
