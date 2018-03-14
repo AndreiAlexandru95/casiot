@@ -5,7 +5,7 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser
 
 from interface.models import DeviceChart, DeviceLog, Device
 from django.contrib.auth.models import User
-from interface.serializers import DeviceChartSerializer, DeviceLogSerializer, DeviceSerializer, UserSerializer, ConsoleSerializer, AvgSerializer, DeviceMultiChartSerializer, MultiAvgSerializer
+from interface.serializers import DeviceChartSerializer, DeviceLogSerializer, DeviceSerializer, UserSerializer, ConsoleSerializer, AvgSerializer, DeviceMultiChartSerializer, MultiAvgSerializer, TestSerializer
 from interface.permissions import DevicePermission
 
 from django.shortcuts import get_object_or_404
@@ -171,7 +171,7 @@ class DeviceMultiChartHViewSet(generics.ListAPIView):
         devices = self.kwargs["pk"]
         devices = devices.split('-')
         devices = list(map(int, devices))
-        queryset = DeviceChart.objects.filter(device_id__in=devices).extra({"day": "date_trunc('hour', date)"}).values("day", "device_id").order_by("day").annotate(avg_val=Avg("value"))
+        queryset = DeviceChart.objects.filter(device_id__in=devices).extra({"day": "date_trunc('hour', date) + date_part('minute', date)::int / 5 * interval '5 min'"}).values("day", "device_id").order_by("day").annotate(avg_val=Avg("value"))
         return queryset
 
 class DeviceMultiChartDViewSet(generics.ListAPIView):
@@ -186,3 +186,14 @@ class DeviceMultiChartDViewSet(generics.ListAPIView):
         queryset = DeviceChart.objects.filter(device_id__in=devices).extra({"day": "date_trunc('day', date)"}).values("day", "device_id").order_by("day").annotate(avg_val=Avg("value"))
         return queryset
 
+class DeviceTestViewSet(generics. ListAPIView):
+    serializer_class = TestSerializer
+    authentication_classes = (SessionAuthentication, BasicAuthentication)
+    permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self):
+        devices = self.kwargs["pk"]
+        devices = devices.split('-')
+        devices = list(map(int, devices))
+        queryset = DeviceChart.objects.filter(device_id__in=devices).extra({"day": "date_trunc('day', date)"}).values("day", "device_id").order_by("day")
+        return queryset

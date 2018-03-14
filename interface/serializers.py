@@ -45,3 +45,6 @@ class MultiAvgSerializer(serializers.Serializer):
     avg_val = serializers.FloatField()
     device_id = serializers.IntegerField()
 
+class TestSerializer(serializers.Serializer):
+    device_id = serializers.IntegerField()
+    day = serializers.DateTimeField()

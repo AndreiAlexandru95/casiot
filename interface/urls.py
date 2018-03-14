@@ -25,4 +25,5 @@ urlpatterns = [
     path('api/devices-chart/<pk>/', DeviceMultiChartViewSet.as_view()),
     path('api/devices-bhchart/<pk>/', DeviceMultiChartHViewSet.as_view()),
     path('api/devices-bdchart/<pk>/', DeviceMultiChartDViewSet.as_view()),
+    path('api/devices-test/<pk>/', DeviceTestViewSet.as_view()),
 ]

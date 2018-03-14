@@ -4,6 +4,8 @@ import PropTypes from 'prop-types'
 import ReactFauxDOM from 'react-faux-dom'
 import Websocket from 'react-websocket'
 import * as d3 from 'd3'
+import Slider from 'rc-slider/lib/Slider'
+import 'rc-slider/assets/index.css';
 
 export default class MultiLineChart extends React.Component {
 	constructor(props) {
@@ -12,6 +14,7 @@ export default class MultiLineChart extends React.Component {
 		this.state = {
 			data: [],
 			zoomTransfrom: null,
+			sl_val: 4,
 		}
 
 		this.zoom = d3.zoom()
@@ -62,6 +65,10 @@ export default class MultiLineChart extends React.Component {
 			.call(this.zoom)
 	}
 
+	handleSliderChange(value) {
+		console.log(value)
+	}
+
 	renderMultiLineChart() {
 		var data = this.state.data
 		if (data.length > 0) {
@@ -72,8 +79,8 @@ export default class MultiLineChart extends React.Component {
 				left: 50,
 			}
 
-			var width = this.props.width - margin.left - margin.right
-			var height = this.props.height - margin.top - margin.bottom
+			var width = 898 - margin.left - margin.right
+			var height = 400 - margin.top - margin.bottom
 
 			var parseDate = d3.timeParse("%Y-%m-%dT%H:%M:%S.%L")
 
@@ -154,6 +161,10 @@ export default class MultiLineChart extends React.Component {
 	render() {
 		return(
 			<div>
+				<div className="avg-slider px-4">
+					Average Gradient
+					<Slider min={0} max={5} marks={{0: 'None', 1: '5m', 2: '15m', 3: '30m', 4: '1h', 5: '1d'}} onAfterChange={this.handleSliderChange.bind(this)} defaultValue={this.state.sl_val}/>
+				</div>
 				{this.renderMultiLineChart()}
 			</div>
 		)

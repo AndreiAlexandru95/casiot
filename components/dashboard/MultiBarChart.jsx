@@ -124,19 +124,18 @@ export default class MultiBarChart extends React.Component {
 				.paddingInner(0.2)
 
 			var x_dev = d3.scaleBand()
-   				.padding(0.05)
 
    			var y = d3.scaleLinear()
     			.rangeRound([height, 0])
 
     		var color = d3.scaleOrdinal(d3.schemeCategory20)
 
+    		var xAxis = d3.axisBottom(x)
+
     		if (this.switch_data == 0 ){
-				var xAxis = d3.axisBottom(x)
-					.tickFormat(d3.timeFormat("%H:%M:%S"));
+				var dateFormat = d3.timeFormat("%m-%d-%H:%M:%S");
 			} else {
-				var xAxis = d3.axisBottom(x)
-					.tickFormat(d3.timeFormat("%Y-%m-%d"));
+				var dateFormat = d3.timeFormat("%Y-%m-%d");
 			}
 
 			var yAxis = d3.axisLeft(y)	
@@ -160,10 +159,12 @@ export default class MultiBarChart extends React.Component {
 	    		.append('g')
 	    			.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
 
+
+
 	    	try {
 			    data.forEach(function(d) {
 			    	if (parseDate(d.day)) {
-			    		d.day = parseDate(d.day)
+			    		d.day = dateFormat(parseDate(d.day))
 			    	}
 			    	d.avg_val = d.avg_val
 			    })
@@ -178,12 +179,15 @@ export default class MultiBarChart extends React.Component {
 
 	    	console.log(dataNest)
 
-	    	x.domain(data.map(function(d) {return d.day}))
-	    	var devices = dataNest[0].values.map(function(d, i) {return d.key})
-	    	console.log(devices)
-	    	x_dev.domain(devices)
-
-	    	y.domain([0, d3.max(data, function(d) {return d.avg_val})])
+	    	x.domain(dataNest.map(function(d) {return d.key}))
+	    	x_dev.domain(dataNest[0].values.map(function(d, i) {return d.key})).rangeRound([0, x.bandwidth()])
+	    	y.domain([0, d3.max(dataNest, function(d) {
+	    		return d3.max(d.values, function(d) {
+	    			return d3.max(d.values, function(d) {
+	    				return d.avg_val
+	    			})
+	    		})
+	    	})])
 
 	    	svg.append('g')
 	    		.attr('class', 'x axis')
@@ -194,22 +198,28 @@ export default class MultiBarChart extends React.Component {
 	    		.attr('class', 'y axis')
 	    		.call(yAxis)
 
-	    	console.log(data)
-
-	    	svg.selectAll("bar")
-		    		.data(data)
+	    	var date_gr = svg.selectAll(".group")
+		    		.data(dataNest)
 		    		.enter()
-	    		.append("rect")
-	    			.attr("x", function(d) {
-	    				return 0;
-	    			})
-	    			.attr("width", x_dev.bandwidth())
-	    			.attr("y", function(d) { return y(d.avg_val); })
-	    			.attr("height", function(d){return height - y(d.avg_val);})
-	    			.style("fill", function(d) {
-	    				return color(d.device_id)
-	    			})
+	    		.append("g")
+	    			.attr("transform", function(d) {return "translate("+ x(d.key) + ", 0)";})
 
+	    	var dev_gr = date_gr.selectAll(".category")
+	    			.data(function(d) {return d.values})
+	    			.enter()
+	    		.append("g")
+	    			.attr("transform", function(d) {return "translate(" + x_dev(d.key) + ", 0)";})
+
+	    	var rects = dev_gr.selectAll(".rect")
+	    			.data(function(d) {return d.values})
+	    			.enter()
+	    		.append("rect")
+	    			.attr("class", "m-rect")
+	    			.attr("width", x_dev.bandwidth())
+	    			.attr("x", function(d) {return 0})
+	    			.attr("y", function(d) {return y(d.avg_val)})
+	    			.attr("height", function(d) {return height - y(d.avg_val)})
+	    			.style("fill", function(d) {return color(d.device_id)})
 
 			return parent.toReact()
 
