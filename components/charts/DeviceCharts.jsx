@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDom from 'react-dom'
 import PropTypes from 'prop-types'
-import MultiLineChart from '../dashboard/MultiLineChart'
+import AdvMultiLineChart from '../dashboard/AdvMultiLineChart'
 
 export default class DeviceCharts extends React.Component {
 	constructor(props) {
@@ -9,7 +9,7 @@ export default class DeviceCharts extends React.Component {
 
 		this.state = {
 			device_list: [],
-			compare_dev: [],
+			compare_dev: '',
 		}
 	}
 
@@ -27,12 +27,17 @@ export default class DeviceCharts extends React.Component {
 	}
 
 	handleDeviceClick(device_id, event) {
+		let device = device_id.toString().concat("-")
 		let compare_dev = this.state.compare_dev
-		let index = compare_dev.indexOf(device_id)
-		if (index > -1) {
-			compare_dev.splice(index, 1)
+		let index = compare_dev.indexOf(device)
+		if (index == 0) {
+			compare_dev = compare_dev.substr(2)
+		} else if (index == compare_dev.length - 2 && compare_dev.length != 0) {
+			compare_dev = compare_dev.slice(0, -2)
+		} else if (index > -1) {
+			compare_dev.replace(device,'')
 		} else {
-			compare_dev.push(device_id)
+			compare_dev = compare_dev.concat(device)
 		}
 		this.setState({
 			compare_dev: compare_dev
@@ -69,12 +74,12 @@ export default class DeviceCharts extends React.Component {
 						{this.renderDeviceList()}
 					</div>
 				</div>
-				<div className="col-9 p-0 card border bl-bg-color">
+				<div className="col-9 p-0 card border">
 					<div className="card-header card-head-font">
 						Charts
 					</div>
 					<div className="card-body p-0 ">
-						<MultiLineChart devices={this.state.compare_dev} />
+						<AdvMultiLineChart devices={this.state.compare_dev} />
 					</div>
 					<div className="card border p-bg-color">
 						<div className="card-header card-head-font">

@@ -26,11 +26,6 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ('id', 'username', 'device_set')
 
-class ConsoleSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = DeviceLog
-        fields = ('id', 'device_id', 'type', 'text', 'date')
-
 class AvgSerializer(serializers.Serializer):
     day = serializers.DateTimeField()
     avg_val = serializers.FloatField()
@@ -44,7 +39,3 @@ class MultiAvgSerializer(serializers.Serializer):
     day = serializers.DateTimeField()
     avg_val = serializers.FloatField()
     device_id = serializers.IntegerField()
-
-class TestSerializer(serializers.Serializer):
-    device_id = serializers.IntegerField()
-    day = serializers.DateTimeField()

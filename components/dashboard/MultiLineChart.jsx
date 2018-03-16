@@ -163,7 +163,7 @@ export default class MultiLineChart extends React.Component {
 			<div>
 				<div className="avg-slider px-4">
 					Average Gradient
-					<Slider min={0} max={5} marks={{0: 'None', 1: '5m', 2: '15m', 3: '30m', 4: '1h', 5: '1d'}} onAfterChange={this.handleSliderChange.bind(this)} defaultValue={this.state.sl_val}/>
+					<Slider className="cas-slider" min={0} max={5} marks={{0: 'None', 1: '5m', 2: '15m', 3: '30m', 4: '1h', 5: '1d'}} onAfterChange={this.handleSliderChange.bind(this)} defaultValue={this.state.sl_val}/>
 				</div>
 				{this.renderMultiLineChart()}
 			</div>
