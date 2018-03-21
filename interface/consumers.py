@@ -2,6 +2,7 @@ from channels.generic.websocket import AsyncJsonWebsocketConsumer
 from interface.models import Device, DeviceLog
 from django.contrib.auth.models import User
 import datetime
+import aiocoap
 
 class DeviceConsumer(AsyncJsonWebsocketConsumer):
 	groups = ["cas_dev_list",]
@@ -73,6 +74,7 @@ class DeviceConsumer(AsyncJsonWebsocketConsumer):
 			if device:
 				device.add_log(DeviceLog.INFO, 'SEND command {0}'.format(command[-3:]), datetime.datetime.now())
 				await self.channel_layer.group_send("cas_dev_list", {"type": "dev_list.update"})
+				await self.sendCoAPMessage("[192.168.10.254]", "test", "/path/")
 
 		if command == "cmd-sn":
 			dev_key = content.get("dev_key", None)
@@ -100,3 +102,13 @@ class DeviceConsumer(AsyncJsonWebsocketConsumer):
 
 	async def dev_list_update(self, event):
 		await self.send_json({"text": "received an updated dev_list"},)
+
+	async def sendCoAPMessage(self, address, payload, path):
+		context = await aiocoap.Context.create_client_context()
+		request = aiocoap.Message(code=aiocoap.PUT, payload=payload.encode('utf8'))
+		request.opt.uri_host = address
+		request.opt.uri_path = path
+		request.opt.uri_port = 5683
+		print("WORKS!")
+		# response = await context.request(request).response
+		# print(response)
