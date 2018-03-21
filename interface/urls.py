@@ -4,11 +4,10 @@ from interface.api_views import *
 
 
 urlpatterns = [
-    path('', HomeView.as_view()),
-    path('devices/', DeviceListView.as_view()),
+    path('', HomeView.as_view(), {'ntab': 'home'}),
+    path('devices/', DeviceListView.as_view(), {'ntab': 'devices'}),
     path('device/<pk>/', DeviceRetrieveView.as_view()),
-    path('logs/', LogListView.as_view()),
-    path('charts/', ChartListView.as_view()),
+    path('charts/', ChartListView.as_view(), {'ntab': 'charts'}),
 
     path('api/device-chart/<pk>/', DeviceChartViewSet.as_view()),
     path('api/device-log/<pk>/', DeviceLogViewSet.as_view()),
@@ -26,4 +25,5 @@ urlpatterns = [
     path('api/device-chartd/<pk>/', DeviceMultiChartHDViewSet.as_view()),
     path('api/device-charte/<pk>/', DeviceMultiChartDViewSet.as_view()),
     path('api/device-chartt/<pk>/', DeviceMultiChartTViewSet.as_view()),
+    path('api/device-ewlog/<pk>/', DeviceWarErrLogViewSet.as_view()),
 ]

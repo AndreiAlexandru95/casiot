@@ -16,7 +16,7 @@
     {% endblock %}
 </head>
 <body>
-	<nav class="navbar fixed-top navbar-expand navbar-dark bg-dark">
+	<nav class="navbar fixed-top navbar-expand">
         <a class="navbar-brand" href="https://www.cascoda.com/">
             <img src={% static "img/cascoda.png" %} width="40" height="40" class="rounded-circle" alt="Cascoda">
         </a>
@@ -25,27 +25,24 @@
         </button>
         <div class="collapse navbar-collapse d-flex justify-content-end" id="navTabs">
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item px-lg-3">
-                    <a class="nav-link font-weight-bold" href="/">Home</a>
+                <li class="nav-item px-lg-3 {% if ntab == 'home' %}active{% endif %}">
+                    <a class="nav-link" href="/">Home</a>
                 </li>
-                <li class="nav-item px-lg-3">
-                    <a class="nav-link font-weight-bold" href="/devices/">Devices</a>
+                <li class="nav-item px-lg-3 {% if ntab == 'devices' %}active{% endif %}">
+                    <a class="nav-link" href="/devices/">Devices</a>
                 </li>
-                <li class="nav-item px-lg-3">
-                    <a class="nav-link font-weight-bold" href="/charts/">Charts</a>
-                </li>
-                <li class="nav-item px-lg-3">
-                    <a class="nav-link font-weight-bold" href="/logs/">Logs</a>
+                <li class="nav-item px-lg-3 {% if ntab == 'charts' %}active{% endif %}">
+                    <a class="nav-link" href="/charts/">Charts</a>
                 </li>
                 {% if request.user.is_authenticated %}
                 <li class="nav-item px-lg-3">
                     <a class="nav-link" href="/logout/">Logout</a>
                 </li>
                 {% else %}
-                <li class="nav-item px-lg-3">
+                <li class="nav-item px-lg-3 {% if ntab == 'signup' %}active{% endif %}">
                     <a class="nav-link" href="/register/">Signup</a>
                 </li>
-                <li class="nav-item px-lg-3">
+                <li class="nav-item px-lg-3 {% if ntab == 'login' %}active{% endif %}">
                     <a class="nav-link" href="/login/">Login</a>
                 </li>
                 {% endif %}

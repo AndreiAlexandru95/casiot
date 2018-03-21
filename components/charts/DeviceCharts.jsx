@@ -66,7 +66,7 @@ export default class DeviceCharts extends React.Component {
 	render() {
 		return (
 			<div className="row d-size m-0">
-				<div className="col-3 p-0 card border lg-bg-color">
+				<div className="col-3 p-0 card border lblue-bg-color">
 					<div className="card-header card-head-font">
 						Devices
 					</div>
@@ -74,19 +74,37 @@ export default class DeviceCharts extends React.Component {
 						{this.renderDeviceList()}
 					</div>
 				</div>
-				<div className="col-9 p-0 card border">
+				<div className="col-9 p-0 card border bg-light">
 					<div className="card-header card-head-font">
 						Charts
 					</div>
 					<div className="card-body p-0 ">
 						<AdvMultiLineChart devices={this.state.compare_dev} />
 					</div>
-					<div className="card border p-bg-color">
+					<div className="card border info-bg-color">
 						<div className="card-header card-head-font">
 							Information
 						</div>
-						<div className="card-body p-0 i-height">
-							Body
+						<div className="card-body i-height add-scroll">
+							<div>
+								<p className="inf-title">Devices</p>
+								<p className="inf-text">List of devices you can choose from to see/compare their charts.</p>
+								<p className="inf-title">Charts</p>
+								<p className="inf-text">Charts with sliders that manipulate the data you require.</p>
+								<p className="inf-subtitle"> Date & Bucket Gradients</p>
+								<p className="inf-text">This gradiends either control the time interval the data is averaged or the bucket size of the Largest Triangle Three Bucket data sampler.</p>
+								<p className="inf-text">In case the Bucket Gradient is not checked.</p>
+								<p className="inf-subtext">None - yields real time data(last 200 entries) for the selected devices.</p>
+								<p className="inf-subtext">5m - yields the entire data averaged every 5 minutes.</p>
+								<p className="inf-subtext">15m - yields the entire data averaged every 15 minutes.</p>
+								<p className="inf-subtext">30m - yields the entire data averaged every 30 minutes.</p>
+								<p className="inf-subtext">1h - yields the entire data averaged every 1 hour.</p>
+								<p className="inf-subtext">1d - yields the entire data averaged every 1 day.</p>
+								<p className="inf-text">In case the Bucket Gradient is checked.</p>
+								<p className="inf-subtext">None - yields all the data recorded for the device.</p>
+								<p className="inf-subtext">Note: Date Gradient None doesn't return real time data if the Bucket Gradient is checked.</p>
+								<p className="inf-subtext">The other Date Gradient choices return the data specified above and apply the sampler with the chosen gradient.</p>
+							</div>
 						</div>
 					</div>
 				</div>

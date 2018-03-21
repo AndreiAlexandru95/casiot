@@ -1,6 +1,7 @@
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
-from interface.models import Device
+from interface.models import Device, DeviceLog
 from django.contrib.auth.models import User
+import datetime
 
 class DeviceConsumer(AsyncJsonWebsocketConsumer):
 	groups = ["cas_dev_list",]
@@ -21,7 +22,6 @@ class DeviceConsumer(AsyncJsonWebsocketConsumer):
 	"""
 	async def receive_json(self, content):
 		command = content.get("command", None)
-		print(command)
 
 		if command == "cmd-ci":
 			dev_id = content.get("id", None)
@@ -34,6 +34,9 @@ class DeviceConsumer(AsyncJsonWebsocketConsumer):
 				device.name = name
 				device.info = info
 				device.save()
+				device.add_log(DeviceLog.INFO, 'SET name {0}'.format(name), datetime.datetime.now())
+				device.add_log(DeviceLog.INFO, 'SET description {0}'.format(info), datetime.datetime.now())
+				await self.channel_layer.group_send("cas_dev_list", {"type": "dev_list.update"})
 
 		if command == "cmd-ti":
 			dev_id = content.get("id", None)
@@ -44,6 +47,8 @@ class DeviceConsumer(AsyncJsonWebsocketConsumer):
 			if device:
 				device.timer = timer
 				device.save()
+				device.add_log(DeviceLog.INFO, 'SET timer {0}'.format(timer), datetime.datetime.now())
+				await self.channel_layer.group_send("cas_dev_list", {"type": "dev_list.update"})
 
 		if command == "cmd-th":
 			dev_id = content.get("id", None)
@@ -56,6 +61,9 @@ class DeviceConsumer(AsyncJsonWebsocketConsumer):
 				device.th_min = th_min
 				device.th_max = th_max
 				device.save()
+				device.add_log(DeviceLog.INFO, 'SET min threshold {0}'.format(th_min), datetime.datetime.now())
+				device.add_log(DeviceLog.INFO, 'SET max threshold {0}'.format(th_max), datetime.datetime.now())
+				await self.channel_layer.group_send("cas_dev_list", {"type": "dev_list.update"})
 
 		if command == "cmd-LED":
 			dev_id = content.get("id", None)
@@ -63,19 +71,23 @@ class DeviceConsumer(AsyncJsonWebsocketConsumer):
 			device = Device.objects.get(id=dev_id)
 
 			if device:
-				print("MUST SEND LED COMMAND TO DEVICE")
-				print(device.id)
+				device.add_log(DeviceLog.INFO, 'SEND command {0}'.format(command[-3:]), datetime.datetime.now())
+				await self.channel_layer.group_send("cas_dev_list", {"type": "dev_list.update"})
 
 		if command == "cmd-sn":
 			dev_key = content.get("dev_key", None)
 			signer = content.get("user", None)
 
-			print(dev_key)
-			print(signer)
-
 			device = Device.objects.get(dev_key=dev_key)
 			user = User.objects.get(username=signer)
 			device.sign_device(user)
+			await self.channel_layer.group_send("cas_dev_list", {"type": "dev_list.update"})
+
+		if command == "cmd-fl_db":
+
+			Device.objects.all().delete()
+			await self.channel_layer.group_send("cas_dev_list", {"type": "dev_list.update"})
+
 
 
 	"""

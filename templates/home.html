@@ -1,7 +1,25 @@
 {% extends "base.html" %}
 
+{% load static %}
+
 {% block main_content %}
-	<div class="container dashboard-container">
-		<h3>Home Page</h3>
+	<div class="jumbotron container dashboard-container home-p px-0">
+		<img src={% static "img/cas_ltd.png" %} width="1200" height="100" alt="Cascoda">
+		<div class="">
+			<h3 class="page-title py-5">Welcome to our Demo</h3>
+			<p class="h-text">The purpose of this project is to demonstrate the use of CASCODA devices inside a Thread Network.</p>
+			<p class="h-text">This website represents a control panel for this devices.</p> 
+			<p class="h-text">By registering, you are given a default set of devices connected to the Thread Network that you can analyze and control.</p>
+			{% if request.user.is_authenticated %}
+				<p>
+					<a href="/devices/" class="btn btn-primary b-t-font">View Devices</a>
+				</p>
+			{% else %}
+				<p>
+					<a href="/register/" class="btn btn-success b-t-font">Signup</a>
+					<a href="/login/" class="btn btn-primary b-t-font">Login</a>
+				</p>
+			{% endif %}
+		</div>
 	</div>	
 {% endblock %}

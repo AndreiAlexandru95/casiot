@@ -91,7 +91,7 @@ export default class BarChart extends React.Component {
 				top: 20,
 				right: 20,
 				bottom: 30,
-				left: 40,
+				left: 30,
 			}
 			var width = 498 - margin.left - margin.right
 			var height = 400 - margin.top - margin.bottom
@@ -157,6 +157,13 @@ export default class BarChart extends React.Component {
 	    	svg.append('g')
 	    		.attr('class', 'y axis')
 	    		.call(yAxis)
+	    			.append("text")
+	    			.attr("fill", "#000")
+	    			.attr("transform", "rotate(-90)")
+	    			.attr("y", 6)
+				    .attr("dy", "0.5em")
+				    .attr("text-anchor", "end")
+				    .text("Temperature (C)")
 
 	    	svg.selectAll("bar")
 	    			.data(data)

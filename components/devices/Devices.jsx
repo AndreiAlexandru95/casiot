@@ -18,7 +18,6 @@ export default class Devices extends React.Component {
 
 	handleData(data) {
 		let result = JSON.parse(data);
-		console.log(result);
 		this.getDeviceList();
 	}
 
@@ -38,9 +37,7 @@ export default class Devices extends React.Component {
 	}
 
 	sendSocketMessage(message) {
-		console.log(this)
 		const socket = this.state.socket
-		console.log(socket)
 		socket.state.ws.send(JSON.stringify(message))
 	}
 
@@ -49,12 +46,31 @@ export default class Devices extends React.Component {
 			<div className="row d-size m-0">
 				<Websocket ref="socket" url={this.props.socket} onMessage={this.handleData.bind(this)} reconnect={true}/>
 				<ListDevices device_list={this.state.device_list} current_user={this.props.current_user} sendSocketMessage={this.sendSocketMessage}/>
-				<div className="col-3 p-0 card border p-bg-color">
+				<div className="col-3 p-0 card border info-bg-color">
 					<div className="card-header card-head-font">
 						Information
 					</div>
 					<div className="card-body">
-						Body
+						<div>
+							<p className="inf-title">Devices</p>
+							{this.props.current_user.is_superuser &&
+								<div>
+									<p className="inf-subtitle">Flush</p>
+									<p className="inf-text">Click to delete all present device records</p>
+								</div>
+							}
+							{!this.props.current_user.is_superuser &&
+								<div>
+									<p className="inf-subtitle">Add</p>
+									<p className="inf-text">Click to use your device key to add a new device to your list</p>
+									<p className="inf-subtext">Contact Cascoda for details on how to aquire keys</p>
+								</div>
+							}
+							<p className="inf-title">Details</p>
+							<p className="inf-text">Displays the basic id information of the selected device/devices</p>
+							<p className="inf-subtitle">More</p>
+							<p className="inf-text">Click to see all the available information of & control the selected device</p>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -88,6 +104,12 @@ class ListDevices extends React.Component {
 			command: 'cmd-sn',
 			dev_key: this.state.dev_key,
 			user: this.props.current_user.username,
+		})
+	}
+
+	flushDBClick(event) {
+		this.props.sendSocketMessage({
+			command: 'cmd-fl_db'
 		})
 	}
 
@@ -140,7 +162,11 @@ class ListDevices extends React.Component {
 							<span className="b-t-font">Value</span>
 							<span className="t-font">{device.value}</span>
 						</p>
-						<a className="btn btn-block b-t-font g-t-color bl-bg-color" href={"/device/"+device.id+"/"}>More...</a>
+						<p className="d-flex justify-content-between">
+							<span className="b-t-font">Warnings&Errors</span>
+							<span className="t-font"><span className="war-log-color">{device.number_of_war}</span> & <span className="err-log-color">{device.number_of_err}</span></span>
+						</p>
+						<a className="btn btn-block b-t-font btn-primary" href={"/device/"+device.id+"/"}>More...</a>
 					</div>
 				)
 			}, this)
@@ -150,15 +176,22 @@ class ListDevices extends React.Component {
 	render() {
 		return (
 			<div className="col-9 row m-0 p-0">
-				<div className="col-4 p-0 card border lg-bg-color">
+				<div className="col-4 p-0 card border lblue-bg-color">
 					<div className="card-header card-head-font d-flex justify-content-between">
 						<div>
 							Devices
 						</div>
 						<div>
-							<button type="button" className="btn btn-block b-t-font m-bg-color" onClick={this.openModal.bind(this)}>
-								<img src="../../static/third_party/open-iconic-master/svg/plus.svg" alt="+"/> <span className="text-center">Add</span>
-							</button>
+							{this.props.current_user.is_superuser &&
+								<button type="button" className="btn btn-block b-t-font m-bg-color" onClick={this.flushDBClick.bind(this)}>
+									<img src="../../static/third_party/open-iconic-master/svg/aperture.svg" alt="-"/> <span className="text-center">Flush</span>
+								</button>
+							}
+							{!this.props.current_user.is_superuser &&
+								<button type="button" className="btn btn-block b-t-font m-bg-color" onClick={this.openModal.bind(this)}>
+									<img src="../../static/third_party/open-iconic-master/svg/plus.svg" alt="+"/> <span className="text-center">Add</span>
+								</button>
+							}
 						</div>
 					</div>
 					<div className="card-body p-0">
@@ -182,7 +215,7 @@ class ListDevices extends React.Component {
 						</form>
 					</div>
 				</Modal>
-				<div className="col-8 p-0 card border g-bg-color">
+				<div className="col-8 p-0 card border bg-light">
 					<div className="card-header card-head-font">
 						Details
 					</div>

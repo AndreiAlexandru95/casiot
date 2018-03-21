@@ -36,14 +36,14 @@ class Device(models.Model):
         except Device.DoesNotExist:
             new_dev = Device.objects.create(dev_key=device_key)
             new_dev.users.add(user)
-            new_dev.add_log(DeviceLog.INFO, 'Device registered to the database', datetime.now())
+            new_dev.add_log(DeviceLog.INFO, 'REGISTERED', datetime.now())
             return new_dev
 
     def sign_device(self, user):
         self.users.add(user)
         self.signed = datetime.now()
         self.save(update_fields=['signed'])
-        self.add_log(DeviceLog.INFO, 'Device signed by {0}, id {1}'.format(user.username, user.id), datetime.now())
+        self.add_log(DeviceLog.INFO, 'SIGNED by {0}'.format(user.username), datetime.now())
 
     def update_value(self, value, ip_addr):
         current_time = datetime.now()
@@ -52,9 +52,9 @@ class Device(models.Model):
         self.modified = current_time
         self.save(update_fields=['value', 'modified', 'ip_addr'])
         if (self.th_min>value)or(self.th_max<value):
-            self.add_log(DeviceLog.WARNING, 'Device {0} updated to {1}'.format(self, value), current_time)
+            self.add_log(DeviceLog.WARNING, 'SET value {0}'.format(value), current_time)
         else:
-            self.add_log(DeviceLog.DEBUG, 'Device {0} updated to {1}'.format(self, value), current_time)
+            self.add_log(DeviceLog.DEBUG, 'SET value {0}'.format(value), current_time)
 
         DeviceChart.objects.create(device=self, value=self.value, date=current_time)
 

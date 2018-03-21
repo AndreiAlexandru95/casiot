@@ -5,6 +5,7 @@ import ReactFauxDOM from 'react-faux-dom'
 import Websocket from 'react-websocket'
 import * as d3 from 'd3'
 import Slider, {createSliderWithTooltip} from 'rc-slider'
+import {largestTriangleThreeBucket} from 'd3fc-sample'
 
 const SliderWithTooltip = createSliderWithTooltip(Slider);
 
@@ -44,21 +45,39 @@ export default class AdvMultiLineChart extends React.Component {
   	}
 
   	getRealTimeData(props) {
+  		var parseDate = d3.timeParse("%Y-%m-%dT%H:%M:%SZ")
+  		var parseRealDate = d3.timeParse("%Y-%m-%dT%H:%M:%S.%L")
   		if (props) {
   			var dev_id = props.devices.slice(0, -1)
   		} else {
   			var dev_id = this.props.devices.slice(0,-1)
   		}
-  		this.serverRequest = $.get('http://192.168.10.201:8000/api/devices-lchart/'+dev_id+'/?format=json', function(result) {
-			this.setState({
-				data: result,
-			});
-		}.bind(this))
+  		if (dev_id != '') {
+	  		this.serverRequest = $.get('http://192.168.10.201:8000/api/devices-lchart/'+dev_id+'/?format=json', function(result) {
+			    result.forEach(function(d) {
+				   	if (parseDate(d.day)) {
+				   		d.day = parseDate(d.day)
+				   	} else if (parseRealDate(d.day.substring(0, d.day.length-4))) {
+				   		d.day = parseRealDate(d.day.substring(0, d.day.length-4))
+				   	}
+				   	d.avg_val = d.avg_val
+				})
+				this.setState({
+					data: result,
+				});
+			}.bind(this))
+  		} else {
+  			this.setState({
+  				data: [],
+  			})
+  		}
   	}
 
 	componentWillReceiveProps(nextProps) {
 		let cur_dev_list = this.props.devices.split("-")
 		let new_dev_list = nextProps.devices.split("-")
+		var parseDate = d3.timeParse("%Y-%m-%dT%H:%M:%SZ")
+		var parseRealDate = d3.timeParse("%Y-%m-%dT%H:%M:%S.%L")
 
 		cur_dev_list.pop()
 		new_dev_list.pop()
@@ -70,6 +89,14 @@ export default class AdvMultiLineChart extends React.Component {
 			this.getRealTimeData(nextProps)
 			// Request all data of device and append to org data.
 			this.serverRequest = $.get('http://192.168.10.201:8000/api/device-charta/'+dev_id+'/?format=json', function(result) {
+				result.forEach(function(d) {
+				   	if (parseDate(d.day)) {
+				   		d.day = parseDate(d.day)
+				   	} else if (parseRealDate(d.day.substring(0, d.day.length-4))) {
+				   		d.day = parseRealDate(d.day.substring(0, d.day.length-4))
+				   	}
+				   	d.avg_val = d.avg_val
+				})
 				this.setState({
 					org_data_a: this.state.org_data_a.concat(result),
 					size_a: this.state.size_a.concat({
@@ -79,6 +106,14 @@ export default class AdvMultiLineChart extends React.Component {
 				})
 			}.bind(this))
 			this.serverRequest = $.get('http://192.168.10.201:8000/api/device-chartb/'+dev_id+'/?format=json', function(result) {
+				result.forEach(function(d) {
+				   	if (parseDate(d.day)) {
+				   		d.day = parseDate(d.day)
+				   	} else if (parseRealDate(d.day.substring(0, d.day.length-4))) {
+				   		d.day = parseRealDate(d.day.substring(0, d.day.length-4))
+				   	}
+				   	d.avg_val = d.avg_val
+				})
 				this.setState({
 					org_data_b: this.state.org_data_b.concat(result),
 					size_b: this.state.size_b.concat({
@@ -88,6 +123,14 @@ export default class AdvMultiLineChart extends React.Component {
 				})
 			}.bind(this))
 			this.serverRequest = $.get('http://192.168.10.201:8000/api/device-chartc/'+dev_id+'/?format=json', function(result) {
+				result.forEach(function(d) {
+				   	if (parseDate(d.day)) {
+				   		d.day = parseDate(d.day)
+				   	} else if (parseRealDate(d.day.substring(0, d.day.length-4))) {
+				   		d.day = parseRealDate(d.day.substring(0, d.day.length-4))
+				   	}
+				   	d.avg_val = d.avg_val
+				})
 				this.setState({
 					org_data_c: this.state.org_data_c.concat(result),
 					size_c: this.state.size_c.concat({
@@ -97,6 +140,14 @@ export default class AdvMultiLineChart extends React.Component {
 				})
 			}.bind(this))
 			this.serverRequest = $.get('http://192.168.10.201:8000/api/device-chartd/'+dev_id+'/?format=json', function(result) {
+				result.forEach(function(d) {
+				   	if (parseDate(d.day)) {
+				   		d.day = parseDate(d.day)
+				   	} else if (parseRealDate(d.day.substring(0, d.day.length-4))) {
+				   		d.day = parseRealDate(d.day.substring(0, d.day.length-4))
+				   	}
+				   	d.avg_val = d.avg_val
+				})
 				this.setState({
 					org_data_d: this.state.org_data_d.concat(result),
 					size_d: this.state.size_d.concat({
@@ -106,6 +157,14 @@ export default class AdvMultiLineChart extends React.Component {
 				})
 			}.bind(this))
 			this.serverRequest = $.get('http://192.168.10.201:8000/api/device-charte/'+dev_id+'/?format=json', function(result) {
+				result.forEach(function(d) {
+				   	if (parseDate(d.day)) {
+				   		d.day = parseDate(d.day)
+				   	} else if (parseRealDate(d.day.substring(0, d.day.length-4))) {
+				   		d.day = parseRealDate(d.day.substring(0, d.day.length-4))
+				   	}
+				   	d.avg_val = d.avg_val
+				})
 				this.setState({
 					org_data_e: this.state.org_data_e.concat(result),
 					size_e: this.state.size_e.concat({
@@ -115,6 +174,14 @@ export default class AdvMultiLineChart extends React.Component {
 				})
 			}.bind(this))
 			this.serverRequest = $.get('http://192.168.10.201:8000/api/device-chartt/'+dev_id+'/?format=json', function(result) {
+				result.forEach(function(d) {
+				   	if (parseDate(d.day)) {
+				   		d.day = parseDate(d.day)
+				   	} else if (parseRealDate(d.day.substring(0, d.day.length-4))) {
+				   		d.day = parseRealDate(d.day.substring(0, d.day.length-4))
+				   	}
+				   	d.avg_val = d.avg_val
+				})
 				this.setState({
 					org_data: this.state.org_data.concat(result),
 					size_t: this.state.size_t.concat({
@@ -283,6 +350,15 @@ export default class AdvMultiLineChart extends React.Component {
 			var parseDate = d3.timeParse("%Y-%m-%dT%H:%M:%SZ")
 			var parseRealDate = d3.timeParse("%Y-%m-%dT%H:%M:%S.%L")
 
+			
+			if (!this.state.dis_b_grad) {
+				const sampler = largestTriangleThreeBucket()
+					.x(function(d) {return d.day})
+					.y(function(d) {return d.avg_val})
+   				sampler.bucketSize(this.state.grade_sl_val)
+				data = sampler(data)
+			}
+
 			var x = d3.scaleTime()
 				.range([0, width])
 
@@ -307,19 +383,6 @@ export default class AdvMultiLineChart extends React.Component {
 	    		.append('g')
 	    			.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
 
-	    	try {
-			    data.forEach(function(d) {
-			    	if (parseDate(d.day)) {
-			    		d.day = parseDate(d.day)
-			    	} else if (parseRealDate(d.day.substring(0, d.day.length-4))) {
-			    		d.day = parseRealDate(d.day.substring(0, d.day.length-4))
-			    	}
-			    	d.avg_val = d.avg_val
-			    })
-			} catch(e) {
-				//
-			}
-
 	    	x.domain(d3.extent(data, function(d) {return d.day}))
 	    	y.domain(d3.extent(data, function(d) {return d.avg_val}))
 
@@ -334,18 +397,27 @@ export default class AdvMultiLineChart extends React.Component {
 
 	    	console.log(dataNest)
 
-	    	var color = d3.scaleOrdinal(d3.schemeCategory20)
+	    	var color = d3.scaleOrdinal(d3.schemeCategory10)
 
 	    	var linesvg = svg.append('svg')
 	    			.attr('width', width)
 	    			.attr('height', height)
 
-	    	dataNest.forEach(function(d) {
+	    	var legendSpace = 20
+
+	    	dataNest.forEach(function(d, i) {
 	    		linesvg.append("path")
 	    			.attr("class", "line")
 	    			.style("stroke", function() {
 	    				return d.color = color(d.key)})
 	    			.attr("d", line(d.values))
+
+	    		linesvg.append("text")
+	    			.attr("x", (margin.left/2) - 15)
+	    			.attr("y", height - (margin.bottom/2)+ 5 - i*legendSpace)
+	    			.style("fill", function() {
+	    				return d.color = color(d.key)})
+	    			.text("dev"+d.key)
 	    	})
 
 	    	svg.append('g')
@@ -356,6 +428,13 @@ export default class AdvMultiLineChart extends React.Component {
 	    	svg.append('g')
 	    		.attr('class', 'y axis')
 	    		.call(yAxis)
+	    		.append("text")
+	    			.attr("fill", "#000")
+	    			.attr("transform", "rotate(-90)")
+	    			.attr("y", 6)
+				    .attr("dy", "0.5em")
+				    .attr("text-anchor", "end")
+				    .text("Temperature (C)")
 
 			return node.toReact()
 		} else {

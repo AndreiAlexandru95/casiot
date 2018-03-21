@@ -6,11 +6,11 @@
     <form method="post">
         {% csrf_token %}
         <img src={% static "img/cascoda.png" %} width="75" height="75" class="rounded-circle mb-4" alt="Cascoda">
-        <h1>Please sign in</h1>
+        <h1>Register to Cascoda Demo</h1>
         {% for field in form %}
         <div class="form-group d-flex justify-content-between row m-0">
-            <label class="col-3 p-2">{{ field.label }}</label>
-            <div class="col-9 p-2">
+            <label class="col-5 p-2">{{ field.label }}</label>
+            <div class="col-7 p-2">
                 {{ field }}
                 {% if field.errors %}
                 <p class="text-danger">
@@ -23,7 +23,7 @@
         </div>
         {% endfor %}
         <div class="">
-            <button type="submit" class="btn btn-block btn-primary">Login</button>
+            <button type="submit" class="btn btn-primary btn-block">Register</button>
         </div>
     </form>
 </div>
