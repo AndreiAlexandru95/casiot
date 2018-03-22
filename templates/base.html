@@ -16,7 +16,7 @@
     {% endblock %}
 </head>
 <body>
-	<nav class="navbar fixed-top navbar-expand">
+	<nav class="navbar sticky-top navbar-expand">
         <a class="navbar-brand" href="https://www.cascoda.com/">
             <img src={% static "img/cascoda.png" %} width="40" height="40" class="rounded-circle" alt="Cascoda">
         </a>
@@ -33,6 +33,9 @@
                 </li>
                 <li class="nav-item px-lg-3 {% if ntab == 'charts' %}active{% endif %}">
                     <a class="nav-link" href="/charts/">Charts</a>
+                </li>
+                <li class="nav-item px-lg-3 {% if ntab == 'dashboard' %}active{% endif %}">
+                    <a class="nav-link" href="/dashboard/">Dashboard</a>
                 </li>
                 {% if request.user.is_authenticated %}
                 <li class="nav-item px-lg-3">
@@ -55,12 +58,6 @@
     <!-- Main Content -->
     {% block main_content %}
     {% endblock %}
-    <!-- Footer Content -->
-    <footer class="footer">
-        <div class="container text-center">
-            <span class="text-muted">&copy; <a class="text-muted"href="https://www.cascoda.com/">CASCODA LTD.</a> 2018</span>
-        </div> 
-    </footer>
 
     <!-- Bootstrap core JavaScript -->
     <script src={% static "third_party/bootstrap/js/jquery-3.3.1.min.js" %}></script>

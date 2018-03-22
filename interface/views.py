@@ -15,3 +15,6 @@ class LogListView(TemplateView):
 
 class ChartListView(TemplateView):
 	template_name = 'dashboard/charts.html'
+
+class DashboardListView(TemplateView):
+	template_name = 'dashboard/dashboard.html'

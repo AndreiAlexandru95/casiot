@@ -200,3 +200,16 @@ class DeviceWarErrLogViewSet(generics.ListAPIView):
         self.check_object_permissions(self.request, obj)
         last_day = datetime.datetime.today() - datetime.timedelta(1)
         return DeviceLog.objects.filter(device_id=self.kwargs["pk"]).filter(date__gte=last_day).filter(type__in=[DeviceLog.WARNING,DeviceLog.ERROR]).only('id', 'type', 'text', 'date')
+
+
+class DevicesDetailsViewSet(generics. ListAPIView):
+    serializer_class = DeviceSerializer
+    authentication_classes = (SessionAuthentication, BasicAuthentication)
+    permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self):
+        devices = self.kwargs["pk"]
+        devices = devices.split('-')
+        devices = list(map(int, devices))
+        queryset = Device.objects.filter(id__in=devices)
+        return queryset

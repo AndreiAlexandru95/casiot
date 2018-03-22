@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load static %}
+{% load render_bundle from webpack_loader %}
+
+{% block additional_head %}
+	<link rel="stylesheet" href={% static "css/dashboard.css" %}>
+{% endblock %}
+
+{% block main_content %}
+	<div class="container-fluid" id="cas_dashboard">
+	</div>	
+{% endblock %}
+
+{% block additional_js %}
+
+    {% render_bundle 'dashboard' %}
+
+{% endblock %}

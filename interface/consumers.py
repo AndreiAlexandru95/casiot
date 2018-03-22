@@ -37,7 +37,7 @@ class DeviceConsumer(AsyncJsonWebsocketConsumer):
 				device.save()
 				device.add_log(DeviceLog.INFO, 'SET name {0}'.format(name), datetime.datetime.now())
 				device.add_log(DeviceLog.INFO, 'SET description {0}'.format(info), datetime.datetime.now())
-				await self.channel_layer.group_send("cas_dev_list", {"type": "dev_list.update"})
+				await self.channel_layer.group_send("cas_dev_list", {"type": "dev_info.update"})
 
 		if command == "cmd-ti":
 			dev_id = content.get("id", None)
@@ -49,7 +49,7 @@ class DeviceConsumer(AsyncJsonWebsocketConsumer):
 				device.timer = timer
 				device.save()
 				device.add_log(DeviceLog.INFO, 'SET timer {0}'.format(timer), datetime.datetime.now())
-				await self.channel_layer.group_send("cas_dev_list", {"type": "dev_list.update"})
+				await self.channel_layer.group_send("cas_dev_list", {"type": "dev_info.update"})
 
 		if command == "cmd-th":
 			dev_id = content.get("id", None)
@@ -64,7 +64,7 @@ class DeviceConsumer(AsyncJsonWebsocketConsumer):
 				device.save()
 				device.add_log(DeviceLog.INFO, 'SET min threshold {0}'.format(th_min), datetime.datetime.now())
 				device.add_log(DeviceLog.INFO, 'SET max threshold {0}'.format(th_max), datetime.datetime.now())
-				await self.channel_layer.group_send("cas_dev_list", {"type": "dev_list.update"})
+				await self.channel_layer.group_send("cas_dev_list", {"type": "dev_info.update"})
 
 		if command == "cmd-LED":
 			dev_id = content.get("id", None)
@@ -73,7 +73,7 @@ class DeviceConsumer(AsyncJsonWebsocketConsumer):
 
 			if device:
 				device.add_log(DeviceLog.INFO, 'SEND command {0}'.format(command[-3:]), datetime.datetime.now())
-				await self.channel_layer.group_send("cas_dev_list", {"type": "dev_list.update"})
+				await self.channel_layer.group_send("cas_dev_list", {"type": "dev_info.update"})
 				await self.sendCoAPMessage("[192.168.10.254]", "test", "/path/")
 
 		if command == "cmd-sn":
@@ -100,9 +100,21 @@ class DeviceConsumer(AsyncJsonWebsocketConsumer):
 		await self.channel_layer.group_discard("cas_dev_list", self.channel_name)
 		pass
 
+	"""
+	Private function to notify of update
+	"""
 	async def dev_list_update(self, event):
 		await self.send_json({"text": "received an updated dev_list"},)
 
+	"""
+	Private function to notify of update
+	"""
+	async def dev_info_update(self, event):
+		await self.send_json({"text": "received an updated device"},)
+
+	"""
+	Private function to send CoAP message to an address
+	"""
 	async def sendCoAPMessage(self, address, payload, path):
 		context = await aiocoap.Context.create_client_context()
 		request = aiocoap.Message(code=aiocoap.PUT, payload=payload.encode('utf8'))

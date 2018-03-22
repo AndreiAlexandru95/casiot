@@ -9,7 +9,7 @@ import {largestTriangleThreeBucket} from 'd3fc-sample'
 
 const SliderWithTooltip = createSliderWithTooltip(Slider);
 
-export default class AdvMultiLineChart extends React.Component {
+export default class AdvMultiLineChart extends React.PureComponent {
 	constructor(props) {
 		super(props)
 
@@ -344,8 +344,8 @@ export default class AdvMultiLineChart extends React.Component {
 				left: 50,
 			}
 
-			var width = 898 - margin.left - margin.right
-			var height = 385 - margin.top - margin.bottom
+			var width = this.props.width - margin.left - margin.right
+			var height = this.props.height - margin.top - margin.bottom
 
 			var parseDate = d3.timeParse("%Y-%m-%dT%H:%M:%SZ")
 			var parseRealDate = d3.timeParse("%Y-%m-%dT%H:%M:%S.%L")
@@ -437,10 +437,6 @@ export default class AdvMultiLineChart extends React.Component {
 				    .text("Temperature (C)")
 
 			return node.toReact()
-		} else {
-			return(
-    			<div className="info-font p-2">Choose devices' chart you wish to display</div>
-    		)
 		}
 	}
 
