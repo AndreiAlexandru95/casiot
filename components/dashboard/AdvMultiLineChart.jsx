@@ -73,6 +73,120 @@ export default class AdvMultiLineChart extends React.PureComponent {
   		}
   	}
 
+  	componentDidMount() {
+  		let devices = this.props.devices.split("-")
+  		var parseDate = d3.timeParse("%Y-%m-%dT%H:%M:%SZ")
+		var parseRealDate = d3.timeParse("%Y-%m-%dT%H:%M:%S.%L")
+  		this.getRealTimeData()
+  		if (devices.length > 0) {
+  			devices.pop()
+  			devices.forEach(function(dev_id) {
+  				this.serverRequest = $.get('http://192.168.10.201:8000/api/device-charta/'+dev_id+'/?format=json', function(result) {
+					result.forEach(function(d) {
+					   	if (parseDate(d.day)) {
+					   		d.day = parseDate(d.day)
+					   	} else if (parseRealDate(d.day.substring(0, d.day.length-4))) {
+					   		d.day = parseRealDate(d.day.substring(0, d.day.length-4))
+					   	}
+					   	d.avg_val = d.avg_val
+					})
+					this.setState({
+						org_data_a: this.state.org_data_a.concat(result),
+						size_a: this.state.size_a.concat({
+							dev_id: dev_id,
+							size: result.length,
+						}),
+					})
+				}.bind(this))
+				this.serverRequest = $.get('http://192.168.10.201:8000/api/device-chartb/'+dev_id+'/?format=json', function(result) {
+					result.forEach(function(d) {
+					   	if (parseDate(d.day)) {
+					   		d.day = parseDate(d.day)
+					   	} else if (parseRealDate(d.day.substring(0, d.day.length-4))) {
+					   		d.day = parseRealDate(d.day.substring(0, d.day.length-4))
+					   	}
+					   	d.avg_val = d.avg_val
+					})
+					this.setState({
+						org_data_b: this.state.org_data_b.concat(result),
+						size_b: this.state.size_b.concat({
+							dev_id: dev_id,
+							size: result.length,
+						}),
+					})
+				}.bind(this))
+				this.serverRequest = $.get('http://192.168.10.201:8000/api/device-chartc/'+dev_id+'/?format=json', function(result) {
+					result.forEach(function(d) {
+					   	if (parseDate(d.day)) {
+					   		d.day = parseDate(d.day)
+					   	} else if (parseRealDate(d.day.substring(0, d.day.length-4))) {
+					   		d.day = parseRealDate(d.day.substring(0, d.day.length-4))
+					   	}
+					   	d.avg_val = d.avg_val
+					})
+					this.setState({
+						org_data_c: this.state.org_data_c.concat(result),
+						size_c: this.state.size_c.concat({
+							dev_id: dev_id,
+							size: result.length,
+						}),
+					})
+				}.bind(this))
+				this.serverRequest = $.get('http://192.168.10.201:8000/api/device-chartd/'+dev_id+'/?format=json', function(result) {
+					result.forEach(function(d) {
+					   	if (parseDate(d.day)) {
+					   		d.day = parseDate(d.day)
+					   	} else if (parseRealDate(d.day.substring(0, d.day.length-4))) {
+					   		d.day = parseRealDate(d.day.substring(0, d.day.length-4))
+					   	}
+					   	d.avg_val = d.avg_val
+					})
+					this.setState({
+						org_data_d: this.state.org_data_d.concat(result),
+						size_d: this.state.size_d.concat({
+							dev_id: dev_id,
+							size: result.length,
+						}),
+					})
+				}.bind(this))
+				this.serverRequest = $.get('http://192.168.10.201:8000/api/device-charte/'+dev_id+'/?format=json', function(result) {
+					result.forEach(function(d) {
+					   	if (parseDate(d.day)) {
+					   		d.day = parseDate(d.day)
+					   	} else if (parseRealDate(d.day.substring(0, d.day.length-4))) {
+					   		d.day = parseRealDate(d.day.substring(0, d.day.length-4))
+					   	}
+					   	d.avg_val = d.avg_val
+					})
+					this.setState({
+						org_data_e: this.state.org_data_e.concat(result),
+						size_e: this.state.size_e.concat({
+							dev_id: dev_id,
+							size: result.length,
+						}),
+					})
+				}.bind(this))
+				this.serverRequest = $.get('http://192.168.10.201:8000/api/device-chartt/'+dev_id+'/?format=json', function(result) {
+					result.forEach(function(d) {
+					   	if (parseDate(d.day)) {
+					   		d.day = parseDate(d.day)
+					   	} else if (parseRealDate(d.day.substring(0, d.day.length-4))) {
+					   		d.day = parseRealDate(d.day.substring(0, d.day.length-4))
+					   	}
+					   	d.avg_val = d.avg_val
+					})
+					this.setState({
+						org_data: this.state.org_data.concat(result),
+						size_t: this.state.size_t.concat({
+							dev_id: dev_id,
+							size: result.length,
+						}),
+					})
+				}.bind(this))
+  			}.bind(this))
+  		}
+  	}
+
 	componentWillReceiveProps(nextProps) {
 		let cur_dev_list = this.props.devices.split("-")
 		let new_dev_list = nextProps.devices.split("-")
@@ -200,7 +314,6 @@ export default class AdvMultiLineChart extends React.PureComponent {
 			let index = this.state.size_a.indexOf(size_obj_a)
 
 			if (!this.state.size_t[index]){
-				console.log("see you in 2 sec")
 				setTimeout(this.deleteDeviceFromData.bind(this, index, dev_id), 2000)
 			} else {
 				this.deleteDeviceFromData(index, dev_id)
@@ -349,7 +462,6 @@ export default class AdvMultiLineChart extends React.PureComponent {
 					var data = this.state.org_data
 				} 
 		}
-		console.log(data)
 		if (data.length > 0) {
 			var margin = {
 				top: 20,
@@ -408,8 +520,6 @@ export default class AdvMultiLineChart extends React.PureComponent {
 	    	var dataNest = d3.nest()
 	    		.key(function(d) {return d.device_id})
 	    		.entries(data)
-
-	    	console.log(dataNest)
 
 	    	var color = d3.scaleOrdinal(d3.schemeCategory10)
 

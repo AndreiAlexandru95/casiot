@@ -213,3 +213,28 @@ class DevicesDetailsViewSet(generics. ListAPIView):
         devices = list(map(int, devices))
         queryset = Device.objects.filter(id__in=devices)
         return queryset
+
+class DevicesChartsViewSet(generics.ListAPIView):
+    serializer_class = ChartSerializer
+    authentication_classes = (SessionAuthentication, BasicAuthentication)
+    permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self):
+        devices = self.kwargs["pk"]
+        devices = devices.split('-')
+        devices = list(map(int, devices))
+        queryset = Device.objects.filter(id__in=devices)
+        return queryset
+
+
+class DevicesLogsViewSet(generics.ListAPIView):
+    serializer_class = DeviceLogSerializer
+    authentication_classes = (SessionAuthentication, BasicAuthentication)
+    permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self):
+        devices = self.kwargs["pk"]
+        devices = devices.split('-')
+        devices = list(map(int, devices))
+        queryset = DeviceLog.objects.filter(device_id__in=devices).order_by('device_id')
+        return queryset

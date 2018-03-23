@@ -61,3 +61,11 @@ class MultiAvgSerializer(serializers.Serializer):
     day = serializers.DateTimeField()
     avg_val = serializers.FloatField()
     device_id = serializers.IntegerField()
+
+
+class ChartSerializer(serializers.ModelSerializer):
+    charts = DeviceChartLSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Device
+        fields=('id', 'charts')

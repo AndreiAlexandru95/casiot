@@ -29,4 +29,6 @@ urlpatterns = [
     path('api/device-ewlog/<pk>/', DeviceWarErrLogViewSet.as_view()),
 
     path('api/devices-details/<pk>/', DevicesDetailsViewSet.as_view()),
+    path('api/devices-charts/<pk>/', DevicesChartsViewSet.as_view()),
+    path('api/devices-logs/<pk>/',DevicesLogsViewSet.as_view()),
 ]

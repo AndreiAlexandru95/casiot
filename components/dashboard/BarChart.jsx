@@ -90,11 +90,11 @@ export default class BarChart extends React.Component {
 			var margin = {
 				top: 20,
 				right: 20,
-				bottom: 30,
+				bottom: 50,
 				left: 30,
 			}
-			var width = 498 - margin.left - margin.right
-			var height = 400 - margin.top - margin.bottom
+			var width = (this.props.width/2 + 200)- margin.left - margin.right
+			var height = this.props.height - margin.top - margin.bottom
 
 			var parseDate = d3.timeParse("%Y-%m-%dT%H:%M:%SZ")
 
