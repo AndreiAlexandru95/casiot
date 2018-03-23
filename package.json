@@ -34,6 +34,7 @@
     "react-dom": "^16.2.0",
     "react-faux-dom": "^4.1.0",
     "react-responsive-modal": "^2.0.1",
+    "react-timer-mixin": "^0.13.3",
     "react-to-string": "0.0.2",
     "react-websocket": "^2.0.0",
     "style-loader": "^0.20.2",

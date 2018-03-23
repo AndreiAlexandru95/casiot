@@ -199,7 +199,22 @@ export default class AdvMultiLineChart extends React.PureComponent {
 			let size_obj_a = size_obj_list_a[0]
 			let index = this.state.size_a.indexOf(size_obj_a)
 
-			let size_a_val = this.state.size_a[index].size
+			if (!this.state.size_t[index]){
+				console.log("see you in 2 sec")
+				setTimeout(this.deleteDeviceFromData.bind(this, index, dev_id), 2000)
+			} else {
+				this.deleteDeviceFromData(index, dev_id)
+			}
+		}
+	}
+
+	deleteDeviceFromData(index, dev_id){
+		if (index < 0) {
+			var size_obj_list_a = this.state.size_a.filter(function(obj) {return obj.dev_id == dev_id})
+			let size_obj_a = size_obj_list_a[0]
+			index = this.state.size_a.indexOf(size_obj_a)
+		}
+		let size_a_val = this.state.size_a[index].size
 			let size_b_val = this.state.size_b[index].size
 			let size_c_val = this.state.size_c[index].size
 			let size_d_val = this.state.size_d[index].size
@@ -273,7 +288,6 @@ export default class AdvMultiLineChart extends React.PureComponent {
 					size_t: size_t.slice(prev_index,1),
 				})
 			}
-		}
 	}
 
 	componentDidUpdate() {
