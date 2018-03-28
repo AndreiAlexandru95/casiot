@@ -121,6 +121,4 @@ class DeviceConsumer(AsyncJsonWebsocketConsumer):
 		request.opt.uri_host = address
 		request.opt.uri_path = path
 		request.opt.uri_port = 5683
-		print("WORKS!")
-		# response = await context.request(request).response
-		# print(response)
+		response = await context.request(request).response

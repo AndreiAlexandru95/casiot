@@ -256,7 +256,7 @@ class Log extends React.PureComponent {
 				let target_id = "nav-log-tab-".concat(device.id.toString())
 				let key = "log-key-".concat(device.id.toString())
 				return (
-					<div className={i == 0 ? 'tab-pane add-scroll-y fade show active':'tab-pane add-scroll-y fade'} key={key}  id={id} role="tabpanel" aria-labelledby={target_id}>
+					<div className={i == 0 ? 'tab-pane fade show active':'tab-pane fade'} key={key}  id={id} role="tabpanel" aria-labelledby={target_id}>
 						<LogTab device={device}/>
 					</div>
 				)
@@ -278,7 +278,7 @@ class Log extends React.PureComponent {
 				</div>
 				<div className="card-body p-0 m-0">
 					{this.state.combine &&
-						<AdvMultiLineChart devices={this.props.devices} width={this.state.width} height={this.state.height}/>
+						<MultiLog devices={this.props.devices}/>
 					}
 					{!this.state.combine &&
 						<div>
@@ -287,7 +287,7 @@ class Log extends React.PureComponent {
 									{this.renderLogTabs()}
 								</div>
 							</nav>
-							<div className="tab-content" id="nav-chart-tabContent">
+							<div className="tab-content add-scroll-y downtab" id="nav-chart-tabContent">
 								{this.renderLogDetails()}
 							</div>
 						</div>
@@ -296,7 +296,129 @@ class Log extends React.PureComponent {
 			</div>
 		)
 	}
+}
 
+class MultiLog extends React.PureComponent {
+	constructor(props) {
+		super(props)
+		this.state = {
+			logs: [],
+			socket: 'ws://'+window.location.host+'/devices/',
+			check_d: true,
+			check_c: false,
+		}
+	}
+
+	getDevicesLogs(props) {
+		var dev_id = ''
+		if (props.devices) {
+			dev_id = props.devices.slice(0, -1)
+		}
+
+		if (dev_id != '') {
+			this.serverRequest = $.get('http://192.168.10.201:8000/api/devices-logs/'+dev_id+'/?format=json', function(result) {
+				this.setState({
+					logs: result,
+				})
+			}.bind(this))
+		}
+	}
+
+	componentDidMount() {
+		this.getDevicesLogs(this.props)
+	}
+
+	componentWillReceiveProps(nextProps) {
+		this.getDevicesLogs(nextProps)
+	}
+
+	handleData(data) {
+		this.getDevicesLogs(this.props)
+	}
+
+	handleDBGChange() {
+		this.setState({
+			check_d: true,
+			check_c: false,
+		})
+	}
+
+
+	handleCMDChange() {
+		this.setState({
+			check_d: false,
+			check_c: true,
+		})
+	}
+
+	renderLogs() {
+		let logs = this.state.logs
+
+		var parseRealDate = d3.timeParse("%Y-%m-%dT%H:%M:%S.%L")
+		var dateFormat = d3.timeFormat("(%d/%m/%Y %H:%M:%S)")
+
+		if (logs.length > 0) {
+			return logs.map(function(log) {
+				let log_key = "log-".concat(log.id.toString())
+
+				let log_dev = "dev".concat(log.device_id.toString())
+				let log_date = parseRealDate(log.date.substring(0, log.date.length-4))
+				let log_type = log.type
+				let log_text = log.text
+
+				if (this.state.check_c && log_type=='DBG') {
+					return
+				}
+				switch (log_type) {
+					case 'INF':
+						return (<p className="log-font inf-log-color" key={log_key}>{log_dev}-{dateFormat(log_date)}: {log_text}</p>)
+					case 'WAR':
+						return (<p className="log-font war-log-color" key={log_key}>{log_dev}-{dateFormat(log_date)}: {log_text}</p>)
+					case 'DBG':
+						return (<p className="log-font dbg-log-color" key={log_key}>{log_dev}-{dateFormat(log_date)}: {log_text}</p>)
+					default:
+						return (<p className="log-font err-log-color" key={log_key}>{log_dev}-{dateFormat(log_date)}: {log_text}</p>)
+				}
+
+			}, this)
+		}
+	}
+
+	render() {
+		if (this.state.logs.length > 0) {
+			return (
+				<div>
+					<Websocket ref="socket" url={this.state.socket} onMessage={this.handleData.bind(this)} reconnect={true}/>
+					<div>
+						<form className="d-flex justify-content-center">
+							<div className="px-4">
+								Modes: 
+							</div>
+							<div className="radio px-2">
+								<label>
+									<input type="radio" value="debug" checked={this.state.check_d} onChange={this.handleDBGChange.bind(this)}/>
+									Debug
+								</label>
+							</div>
+							<div className="radio px-2">
+								<label>
+									<input type="radio" value="daily" checked={this.state.check_c} onChange={this.handleCMDChange.bind(this)}/>
+									Command
+								</label>
+							</div>
+						</form>
+					</div>
+					<div className="l-downtab add-scroll-y">
+						{this.renderLogs()}
+					</div>
+				</div>
+			)	
+		} else {
+			return (
+				<p className="info-font">Loading...</p>
+			)
+		}
+	}
 }
 
 class LogTab extends React.PureComponent {
@@ -445,7 +567,6 @@ class LogTab extends React.PureComponent {
 							</div>
 						</form>
 					</div>
-					<hr className="my-1"/>
 					{this.renderLog()}
 				</div>
 			)	
@@ -1053,7 +1174,7 @@ class Commands extends React.PureComponent {
 							{this.renderCommandTabs()}
 						</div>
 					</nav>
-					<div className="tab-content add-scroll-y" id="nav-details-tabContent">
+					<div className="tab-content add-scroll-y downtab" id="nav-details-tabContent">
 						{this.renderDeviceCommands()}
 					</div>
 				</div>

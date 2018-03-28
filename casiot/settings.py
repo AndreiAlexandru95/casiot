@@ -36,24 +36,23 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'interface',
     'channels',
     'rest_framework',
-    'debug_toolbar',
     'webpack_loader',
-    'interface',
     'corsheaders',
 ]
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'casiot.urls'
@@ -137,6 +136,8 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
 
+STATIC_ROOT = 'static/'
+
 # CHANNEL_LAYERS Setup
 
 CHANNEL_LAYERS = {
@@ -146,16 +147,6 @@ CHANNEL_LAYERS = {
             "hosts": [("localhost", 8001)],
         },
     },
-}
-
-# DDT Setup
-
-INTERNAL_IPS = ('127.0.0.1','localhost','192.168.10.254','192.168.10.43', '[fd14:ac28:a278:1:ba27:ebff:fecd:bb5b]',)
-
-def show_toolbar(request):
-    return True
-DEBUG_TOOLBAR_CONFIG = {
-    "SHOW_TOOLBAR_CALLBACK": show_toolbar,
 }
 
 # Webpack Config
@@ -169,8 +160,10 @@ WEBPACK_LOADER = {
 
 # LOGIN & LOGOUT
 
-LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/dashboard/'
 LOGOUT_REDIRECT_URL = '/login/'
 
 # Enable cors for all domains
 CORS_ORIGIN_ALLOW_ALL = True
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'

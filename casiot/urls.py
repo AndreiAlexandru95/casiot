@@ -16,8 +16,6 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
-from django.conf import settings
-
 from django.views.generic.edit import CreateView
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.views import LoginView, LogoutView
@@ -29,9 +27,3 @@ urlpatterns = [
     path('login/', LoginView.as_view(template_name='account/login.html'), {'ntab': 'login'}),
     path('logout/', LogoutView.as_view()),
 ]
-
-if settings.DEBUG:
-	import debug_toolbar
-	urlpatterns += [
-		path('__debug__/', include(debug_toolbar.urls)),
-	]

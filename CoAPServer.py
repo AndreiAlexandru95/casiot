@@ -1,7 +1,6 @@
 from django.utils import timezone
 import datetime
 import logging
-
 import asyncio
 import aiocoap.resource as resource
 import aiocoap
@@ -14,12 +13,9 @@ from django.conf import settings
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "casiot.settings")
 django.setup()
 
-
-from interface.serializers import *
 from interface.models import *
-
 from channels.layers import get_channel_layer
-
+from asgiref.sync import sync_to_async
 channel_layer = get_channel_layer()
 
 class DeviceResource(resource.Resource, resource.PathCapable):
@@ -33,6 +29,8 @@ class DeviceResource(resource.Resource, resource.PathCapable):
 			device_key = request.payload.decode('utf8')
 			admin = User.objects.get(username='admin')
 			device = Device.create_update_device(device_key=device_key, user=admin)
+
+			device_id = str(device.id)
 			
 			return aiocoap.Message(payload=device_id.encode('utf8'))
 
@@ -41,9 +39,9 @@ class DeviceResource(resource.Resource, resource.PathCapable):
 		value = float(request.payload.decode('utf8'))
 
 		dev_ip_addr = request.remote.sockaddr[0]
-		updated_device = Device.get_device_by_id(id=device_id)
+		updated_device = Device.objects.get(id=device_id)
 
-		updated_device.update_value(value=value, ip_addr=dev_ip_addr, error=False)
+		await sync_to_async(updated_device.update_value)(value=value, ip_addr=dev_ip_addr)
 
 		return aiocoap.Message(payload=request.payload)
 
@@ -71,6 +69,7 @@ class MessageResource(resource.Resource, resource.PathCapable):
 			message_type = DeviceLog.DBG
 
 		updated_device.add_log(mess_type=message_type, text=message_text)
+		await self.channel_layer.group_send("cas_dev_list", {"type": "dev_list.update", "text": "received an updated device"})
 
 		return aiocoap.Message(payload=request.payload)
 

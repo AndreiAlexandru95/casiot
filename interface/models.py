@@ -46,6 +46,7 @@ class Device(models.Model):
         self.add_log(DeviceLog.INFO, 'SIGNED by {0}'.format(user.username), datetime.now())
 
     def update_value(self, value, ip_addr):
+        print("update triggered")
         current_time = datetime.now()
         self.value = value
         self.ip_addr = ip_addr

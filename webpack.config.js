@@ -5,9 +5,6 @@ var BundleTracker = require('webpack-bundle-tracker')
 module.exports = {
     context: __dirname,
     entry: {
-        devices: './components/devices/index',
-        device: './components/device/index',
-        charts: './components/charts/index',
         dashboard: './components/dashboard/index',
     },
     output: {

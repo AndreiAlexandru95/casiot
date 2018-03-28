@@ -69,3 +69,8 @@ class ChartSerializer(serializers.ModelSerializer):
     class Meta:
         model = Device
         fields=('id', 'charts')
+
+class DeviceLogCSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DeviceLog
+        fields = ('device_id', 'id', 'type', 'text', 'date')
