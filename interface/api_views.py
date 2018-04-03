@@ -131,6 +131,10 @@ class DeviceMultiChartHBViewSet(generics.ListAPIView):
     authentication_classes = (SessionAuthentication, BasicAuthentication)
     permission_classes = (DevicePermission,)
 
+    @method_decorator(cache_page(900))
+    def dispatch(self, *args, **kwargs):
+        return super(DeviceMultiChartTViewSet, self).dispatch(*args, **kwargs)
+
     def get_queryset(self):
         obj = get_object_or_404(Device.objects.all(), pk=self.kwargs["pk"])
         self.check_object_permissions(self.request, obj)
@@ -142,6 +146,10 @@ class DeviceMultiChartHCViewSet(generics.ListAPIView):
     authentication_classes = (SessionAuthentication, BasicAuthentication)
     permission_classes = (DevicePermission,)
 
+    @method_decorator(cache_page(1800))
+    def dispatch(self, *args, **kwargs):
+        return super(DeviceMultiChartTViewSet, self).dispatch(*args, **kwargs)
+
     def get_queryset(self):
         obj = get_object_or_404(Device.objects.all(), pk=self.kwargs["pk"])
         self.check_object_permissions(self.request, obj)
@@ -152,6 +160,10 @@ class DeviceMultiChartHDViewSet(generics.ListAPIView):
     serializer_class = MultiAvgSerializer
     authentication_classes = (SessionAuthentication, BasicAuthentication)
     permission_classes = (DevicePermission,)
+
+    @method_decorator(cache_page(3600))
+    def dispatch(self, *args, **kwargs):
+        return super(DeviceMultiChartTViewSet, self).dispatch(*args, **kwargs)
 
     def get_queryset(self):
         obj = get_object_or_404(Device.objects.all(), pk=self.kwargs["pk"])
