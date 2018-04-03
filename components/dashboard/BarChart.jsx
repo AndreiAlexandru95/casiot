@@ -43,14 +43,18 @@ export default class BarChart extends React.Component {
 	}
 
 	displayTip(d) {
+		var parseRealDate = d3.timeParse("%Y-%m-%dT%H:%M:%S.%L")
+		var dateFormat = d3.timeFormat("%d/%m/%Y %H:%M:%S")
+
 		this.setState({
 			tip_style: {
-				top: d3.event.offsetY+50,
+				top: d3.event.offsetY+120,
 				left: d3.event.offsetX+5,
 				opacity: 0.8,
-				backgroundColor: '#77dfd1',
+				backgroundColor: '#00aaf6e6',
+				color: 'white',
 			},
-			tip_content: "Date: "+d.day+" Value: "+d.avg_val
+			tip_content: "Date: "+dateFormat(parseRealDate(d.day.toString().substring(0, d.day.toString().length-4)))+" Value: "+d.avg_val
 		})
 	}
 

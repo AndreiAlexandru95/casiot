@@ -14,6 +14,9 @@ from django.db.models import Avg, Subquery, OuterRef, F, RowRange, Max, Count
 from django.db.models.functions import DenseRank, Ntile, Lag, Rank, Lead
 from django.db.models.expressions import Window, RawSQL
 
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
+
 class DeviceDetailViewSet(generics.RetrieveAPIView):
     queryset = Device.objects.all()
     serializer_class = DeviceSerializer
@@ -185,6 +188,10 @@ class DeviceMultiChartTViewSet(generics.ListAPIView):
     authentication_classes = (SessionAuthentication, BasicAuthentication)
     permission_classes = (DevicePermission,)
 
+    @method_decorator(cache_page(3600))
+    def dispatch(self, *args, **kwargs):
+        return super(DeviceMultiChartTViewSet, self).dispatch(*args, **kwargs)
+
     def get_queryset(self):
         obj = get_object_or_404(Device.objects.all(), pk=self.kwargs["pk"])
         self.check_object_permissions(self.request, obj)
@@ -199,7 +206,7 @@ class DeviceWarErrLogViewSet(generics.ListAPIView):
         obj = get_object_or_404(Device.objects.all(), pk=self.kwargs["pk"])
         self.check_object_permissions(self.request, obj)
         last_day = datetime.datetime.today() - datetime.timedelta(1)
-        return DeviceLog.objects.filter(device_id=self.kwargs["pk"]).filter(date__gte=last_day).filter(type__in=[DeviceLog.WARNING,DeviceLog.ERROR]).only('id', 'type', 'text', 'date')
+        return DeviceLog.objects.filter(device_id=self.kwargs["pk"]).filter(date__gte=last_day).filter(type__in=[DeviceLog.WARNING,DeviceLog.ERROR]).only('id', 'type', 'text', 'date').order_by('-date')
 
 
 class DevicesDetailsViewSet(generics. ListAPIView):

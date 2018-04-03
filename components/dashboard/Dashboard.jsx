@@ -67,7 +67,6 @@ export default class Dashboard extends React.PureComponent {
 
 	handleData(data) {
 		let result = JSON.parse(data)
-		console.log(result)
 		if (result.text == "received an updated dev_list"){
 			this.getDeviceList()
 		}
@@ -962,7 +961,6 @@ class Commands extends React.PureComponent {
 
 	openModal(device_id, event) {
 		let cmd = event.target.dataset.cmd
-		console.log(device_id)
 		switch(cmd) {
 			case 'cmd-ci':
 				break;

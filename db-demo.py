@@ -11,10 +11,10 @@ def main():
     from interface.models import Device
     from django.contrib.auth.models import User
 
-    andrei = User.objects.create_user('andrei', 'alex@demo.com', 'fc82bqk2')
-    victor = User.objects.create_user('victor', 'victor@demo.com', 'fc82bqk2')
-
     admin = User.objects.get(username='admin')
+    andrei = User.objects.get(username='andrei')
+    victor = User.objects.get(username='victor')
+    
     dev1 = Device.create_update_device(device_key='key01', user=admin)
     dev1.sign_device(andrei)
     dev2 = Device.create_update_device(device_key='key02', user=admin)
