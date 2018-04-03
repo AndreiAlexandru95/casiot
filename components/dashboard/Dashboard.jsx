@@ -769,6 +769,8 @@ class Details extends React.PureComponent {
 		this.state = {
 			device_list: [],
 			socket: 'ws://'+window.location.host+'/devices/',
+			exp_chart: [],
+			exp_log: [],
 		}
 	}
 
@@ -788,9 +790,21 @@ class Details extends React.PureComponent {
 					device_list: result,
 				});
 			}.bind(this))
+			this.serverRequest = $.get('http://192.168.10.201:8000/api/devices-dwchart/'+devices+'/?format=json', function(result) {
+				this.setState({
+					exp_chart: result,
+				});
+			}.bind(this))
+			this.serverRequest = $.get('http://192.168.10.201:8000/api/devices-dwlog/'+devices+'/?format=json', function(result) {
+				this.setState({
+					exp_log: result,
+				});
+			}.bind(this))
 		} else {
 			this.setState({
 				device_list: [],
+				exp_chart: [],
+				exp_log: [],
 			});
 		}
 	}
@@ -830,6 +844,14 @@ class Details extends React.PureComponent {
 				let target_id = "nav-det-tab-".concat(device.id.toString())
 				let key = "det-key-".concat(device.id.toString())
 				let l_date = parseRealDate(device.modified.substring(0, device.modified.length-4))
+				let dw_chart = []
+				let dw_log = []
+				dw_chart = this.state.exp_chart.filter(function(dev) {
+					return dev.device_id == device.id
+				})
+				dw_log = this.state.exp_log.filter(function(dev) {
+					return dev.device_id == device.id
+				})
 				return (
 					<div className={i == 0 ? 'tab-pane fade show active':'tab-pane fade'} key={key}  id={id} role="tabpanel" aria-labelledby={target_id}>
 						<div className="pl-2 pt-2">
@@ -877,6 +899,16 @@ class Details extends React.PureComponent {
 								<span className="db-t-font">24h Errors </span>
 								<span className="dt-font"> {device.number_of_err}</span>
 							</p>
+							{dw_chart.length > 0 &&
+							<CSVLink data={dw_chart} className="btn btn-block btn-outline-secondary hf-width p-0">
+								<img src="../../static/third_party/open-iconic-master/svg/share-boxed.svg" alt="+"/> <span className="text-center">Export Data</span>
+							</CSVLink>
+							}
+							{dw_log.length > 0 && 
+							<CSVLink data={dw_log} className="btn btn-block btn-outline-secondary hf-width p-0">
+								<img src="../../static/third_party/open-iconic-master/svg/share-boxed.svg" alt="+"/> <span className="text-center">Export Log</span>
+							</CSVLink>
+							}
 						</div>
 					</div>
 				)

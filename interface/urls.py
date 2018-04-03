@@ -25,5 +25,7 @@ urlpatterns = [
     path('api/device-chartt/<pk>/', DeviceMultiChartTViewSet.as_view()),
     path('api/device-ewlog/<pk>/', DeviceWarErrLogViewSet.as_view()),
     path('api/devices-details/<pk>/', DevicesDetailsViewSet.as_view()),
-    path('api/devices-logs/<pk>/',DevicesLogsViewSet.as_view()),
+    path('api/devices-logs/<pk>/', DevicesLogsViewSet.as_view()),
+    path('api/devices-dwchart/<pk>/', ChartDownloadViewSet.as_view()),
+    path('api/devices-dwlog/<pk>/', LogDownloadViewSet.as_view()),
 ]
