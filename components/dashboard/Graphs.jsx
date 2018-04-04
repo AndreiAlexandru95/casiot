@@ -180,7 +180,7 @@ export default class Graphs extends React.PureComponent {
 					</div>
 					<span className="pth pl-5">
 						<input type="checkbox" checked={this.state.combine} onChange={this.handleCombineChange.bind(this)}/>
-						<span>Combine</span>
+						<span> Combine </span>
 					</span>
 				</div>
 				<div className="card-body p-0 m-0">

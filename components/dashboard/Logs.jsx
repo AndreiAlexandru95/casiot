@@ -270,7 +270,7 @@ export default class Logs extends React.PureComponent {
 		let ewColor = this.state.mode_ew ? "rgba(225, 0, 0, 0.5)" : "rgba(225, 0, 0 , 1)"
 		return (
 			<div className="col-md-12 card dash-panel-height-sm p-0">
-				<div className="card-header d-flex flex-row chh">
+				<div className="card-header d-flex flex-row">
 					Logs
 					<button disabled={this.state.show_ew} style={{backgroundColor: dbgColor}} className="btn btn-block b-t-font m-0 p-0 ml-5 filt-btn" onClick={this.handleDBGClick.bind(this)}></button>
 					<button disabled={this.state.show_ew} style={{backgroundColor: cmdColor}} className="btn btn-block b-t-font m-0 p-0 filt-btn" onClick={this.handleCMDClick.bind(this)}></button>
@@ -281,7 +281,7 @@ export default class Logs extends React.PureComponent {
 					</span>
 					<span className="pl-5">
 						<input type="checkbox" checked={this.state.combine} onChange={this.handleCombineChange.bind(this)}/>
-						<span>Combine</span>
+						<span> Combine </span>
 					</span>
 				</div>
 				<div className="card-body p-0 m-0 downtab add-scroll-y">
