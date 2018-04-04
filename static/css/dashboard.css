@@ -41,6 +41,10 @@
   border-radius: 0px;
 }
 
+.dev-height {
+  height: 49px;
+}
+
 .dash-panel-height-sm {
   height: calc(35vh - 30px);
   max-height: calc(35vh - 30px);
