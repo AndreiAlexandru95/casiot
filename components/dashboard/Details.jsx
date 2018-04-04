@@ -149,7 +149,7 @@ export default class Details extends React.PureComponent {
 	render() {
 		return (
 			<div className="col-md-12 card dash-panel-height-lg p-0">
-				<div className="card-header">
+				<div className="card-header chh">
 					Details
 				</div>
 				<div className="card-body p-0 m-0">

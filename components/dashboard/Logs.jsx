@@ -189,9 +189,7 @@ export default class Logs extends React.PureComponent {
 		} else {
 			logs = logs.concat(this.state.uc_logs)
 		}
-		console.log(logs)
 		logs = logs.filter((log)=>{return log.device_id == device.id})
-		console.log(logs)
 
 		var parseRealDate = d3.timeParse("%Y-%m-%dT%H:%M:%S.%L")
 		var dateFormat = d3.timeFormat("(%d/%m/%Y %H:%M:%S)")
@@ -272,12 +270,12 @@ export default class Logs extends React.PureComponent {
 		let ewColor = this.state.mode_ew ? "rgba(225, 0, 0, 0.5)" : "rgba(225, 0, 0 , 1)"
 		return (
 			<div className="col-md-12 card dash-panel-height-sm p-0">
-				<div className="card-header d-flex flex-row">
+				<div className="card-header d-flex flex-row chh">
 					Logs
 					<button disabled={this.state.show_ew} style={{backgroundColor: dbgColor}} className="btn btn-block b-t-font m-0 p-0 ml-5 filt-btn" onClick={this.handleDBGClick.bind(this)}></button>
 					<button disabled={this.state.show_ew} style={{backgroundColor: cmdColor}} className="btn btn-block b-t-font m-0 p-0 filt-btn" onClick={this.handleCMDClick.bind(this)}></button>
 					<button disabled={this.state.show_ew} style={{backgroundColor: ewColor}} className="btn btn-block b-t-font m-0 p-0 filt-btn" onClick={this.handleEWClick.bind(this)}></button>
-					<span className="px-5">
+					<span className="pl-5">
 						<input type="checkbox" checked={this.state.show_ew} onChange={this.handleEWChange.bind(this)}/>
 						<span>24h War/Err</span>
 					</span>

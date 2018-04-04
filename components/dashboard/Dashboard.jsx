@@ -122,7 +122,7 @@ export default class Dashboard extends React.PureComponent {
 	render() {
 		return (
 			<div className="row">
-				<Websocket ref="socket" url={this.props.socket} onMessage={this.handleData.bind(this)} reconnect={true}/>
+				<Websocket ref="socket" url={this.props.device_socket} onMessage={this.handleData.bind(this)} reconnect={true}/>
 				<div className="col-md-10 row m-0 p-0">
 					<div className="col-md-9 row m-0 p-0">
 						<Chart devices={this.state.devices_to_show} />

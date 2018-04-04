@@ -252,16 +252,16 @@ export default class Commands extends React.PureComponent {
 	render() {
 		return (
 			<div className="col-md-12 card dash-panel-height-sm p-0">
-				<div className="card-header">
+				<div className="card-header chh">
 					Commands
 				</div>
-				<div className="card-body p-0 m-0">
+				<div className="card-body p-0 m-0 add-scroll-y downtab">
 					<nav>
 						<div className="nav nav-tabs add-scroll-x" id="nav-details-tab" role="tablist">
 							{this.renderCommandTabs()}
 						</div>
 					</nav>
-					<div className="tab-content add-scroll-y downtab" id="nav-details-tabContent">
+					<div className="tab-content" id="nav-details-tabContent">
 						{this.renderDeviceCommands()}
 					</div>
 				</div>

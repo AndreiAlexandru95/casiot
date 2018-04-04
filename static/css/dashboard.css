@@ -6,6 +6,18 @@
   z-index: 100;
 }
 
+.chh {
+  height: 60px;
+}
+
+.pth {
+  padding-top: 12px;
+}
+
+.swidth {
+  width: 300px;
+}
+
 .filt-btn {
   height: 25px;
   width: 25px;
@@ -21,7 +33,7 @@
 }
 
 .uptab {
-  height: calc(60vh - 100px);
+  height: calc(60vh - 117px);
 }
 
 .sidebar-sticky {

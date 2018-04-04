@@ -137,7 +137,7 @@ export default class Dash extends React.PureComponent {
 				</div>
 				<div className="col-md-2 p-0 m-0">
 					<div className="card bg-light">
-						<div className="card-header card-head-font dev-bg-color d-flex justify-content-between dev-height pt-2">
+						<div className="card-header card-head-font dev-bg-color d-flex justify-content-between chh pt-2">
 							<div className="pb-2">
 								Devices
 							</div>
