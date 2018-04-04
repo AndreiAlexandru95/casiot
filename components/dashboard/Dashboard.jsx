@@ -928,7 +928,7 @@ class Details extends React.PureComponent {
 							{this.renderDeviceTabs()}
 						</div>
 					</nav>
-					<div className="tab-content" id="nav-details-tabContent">
+					<div className="tab-content " id="nav-details-tabContent">
 						{this.renderDeviceDetails()}
 					</div>
 				</div>
