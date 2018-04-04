@@ -6,12 +6,22 @@
   z-index: 100;
 }
 
+.filt-btn {
+  height: 25px;
+  width: 25px;
+  border-radius: 0px;
+}
+
 .downtab {
   height: calc(35vh - 135px);
 }
 
 .l-downtab {
   height: calc(35vh - 113px);
+}
+
+.uptab {
+  height: calc(60vh - 100px);
 }
 
 .sidebar-sticky {

@@ -84,7 +84,7 @@ export default class Details extends React.PureComponent {
 				})
 				return (
 					<div className={i == 0 ? 'tab-pane fade show active':'tab-pane fade'} key={key}  id={id} role="tabpanel" aria-labelledby={target_id}>
-						<div className="pl-2 pt-2">
+						<div className="pl-2 pt-2 uptab add-scroll-y">
 							<p className="db-t-font m-p">
 								Name & ID
 							</p>

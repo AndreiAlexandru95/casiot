@@ -18,6 +18,7 @@ export default class Dash extends React.PureComponent {
 			open: false,
 			dev_key: '',
 			device_socket: null,
+			update: false,
 		}
 
 		this.sendSocketMessage = this.sendSocketMessage.bind(this)
@@ -78,6 +79,7 @@ export default class Dash extends React.PureComponent {
 			this.serverRequest = $.get('http://192.168.10.201:8000/api/devices-details/'+devices+'/?format=json', function(data) {
 				this.setState({
 					device_show_list: data,
+					update: !this.state.update,
 				})
 			}.bind(this))
 		}
@@ -126,7 +128,7 @@ export default class Dash extends React.PureComponent {
 				<div className="col-md-10 row m-0 p-0">
 					<div className="col-md-9 row m-0 p-0">
 						<Graphs device_list={this.state.device_show_list} />
-						<Logs device_list={this.state.device_show_list} />
+						<Logs device_list={this.state.device_show_list} update={this.state.update}/>
 					</div>
 					<div className="col-md-3 row m-0 p-0">
 						<Details device_list={this.state.device_show_list} />

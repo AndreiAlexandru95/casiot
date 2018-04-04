@@ -271,3 +271,27 @@ class LogDownloadViewSet(generics.ListAPIView):
         devices = list(map(int, devices))
         queryset = DeviceLog.objects.filter(device_id__in=devices)
         return queryset
+
+class RTMLogViewSet(generics.ListAPIView):
+    serializer_class = DeviceLogDSerializer
+    authentication_classes = (SessionAuthentication, BasicAuthentication)
+    permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self):
+        devices = self.kwargs["pk"]
+        devices = devices.split('-')
+        devices = list(map(int, devices))
+        limit = len(devices) * 50
+        queryset = DeviceLog.objects.filter(device_id__in=devices).annotate(rank = RawSQL('row_number() OVER (PARTITION BY device_id ORDER BY date DESC)',[])).order_by("rank").values("device_id", "type", "date", "text")[:limit]
+        return queryset
+
+class DevicesWarErrLogViewSet(generics.ListAPIView):
+    serializer_class = DeviceLogCSerializer
+    authentication_classes = (SessionAuthentication, BasicAuthentication)
+    permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self):
+        devices = self.kwargs["pk"]
+        devices = devices.split('-')
+        last_day = datetime.datetime.today() - datetime.timedelta(1)
+        return DeviceLog.objects.filter(device_id__in=devices).filter(date__gte=last_day).filter(type__in=[DeviceLog.WARNING,DeviceLog.ERROR]).only('id', 'type', 'text', 'date', 'device_id').order_by('-date')

@@ -28,4 +28,6 @@ urlpatterns = [
     path('api/devices-logs/<pk>/', DevicesLogsViewSet.as_view()),
     path('api/devices-dwchart/<pk>/', ChartDownloadViewSet.as_view()),
     path('api/devices-dwlog/<pk>/', LogDownloadViewSet.as_view()),
+    path('api/devices-llogs/<pk>/',RTMLogViewSet.as_view()),
+    path('api/devices-ewlogs/<pk>/',DevicesWarErrLogViewSet.as_view()),
 ]
