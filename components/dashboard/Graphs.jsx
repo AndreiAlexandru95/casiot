@@ -339,6 +339,14 @@ export default class Graphs extends React.PureComponent {
 			var width = this.state.s_width - margin.left - margin.right
 			var height = this.state.s_height - margin.top - margin.bottom
 
+			if (!this.state.dis_b_grad) {
+				const sampler = largestTriangleThreeBucket()
+					.x(function(d) {return d.day})
+					.y(function(d) {return d.avg_val})
+				sampler.bucketSize(this.state.grade_sl_val)
+				data = sampler(data)
+			}
+
 			var x = d3.scaleTime()
 				.range([0, width])
 
