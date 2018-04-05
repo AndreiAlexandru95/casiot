@@ -32,17 +32,17 @@ export default class Logs extends React.PureComponent {
 			})
 			if (nextProps.device_list.length > 0) {
 				let devices = nextProps.device_list.map(dev => dev.id).join('-')
-				this.serverRequest = $.get('http://192.168.10.207:8000/api/devices-logs/'+devices+'/?format=json', function(result) {
+				this.serverRequest = $.get('http://192.168.10.201:8000/api/devices-logs/'+devices+'/?format=json', function(result) {
 					this.setState({
 						c_logs: result,
 					})
 				}.bind(this))
-				this.serverRequest = $.get('http://192.168.10.207:8000/api/devices-llogs/'+devices+'/?format=json', function(result) {
+				this.serverRequest = $.get('http://192.168.10.201:8000/api/devices-llogs/'+devices+'/?format=json', function(result) {
 					this.setState({
 						uc_logs: result,
 					})
 				}.bind(this))
-				this.serverRequest = $.get('http://192.168.10.207:8000/api/devices-ewlogs/'+devices+'/?format=json', function(result) {
+				this.serverRequest = $.get('http://192.168.10.201:8000/api/devices-ewlogs/'+devices+'/?format=json', function(result) {
 					this.setState({
 						ew_logs: result,
 					})
@@ -58,17 +58,17 @@ export default class Logs extends React.PureComponent {
 		if (this.props.update != nextProps.update && this.props.device_list.length == nextProps.device_list.length) {
 			if (this.state.device_list.length > 0) {
 				let devices = this.props.device_list.map(dev => dev.id).join('-')
-				this.serverRequest = $.get('http://192.168.10.207:8000/api/devices-logs/'+devices+'/?format=json', function(result) {
+				this.serverRequest = $.get('http://192.168.10.201:8000/api/devices-logs/'+devices+'/?format=json', function(result) {
 					this.setState({
 						c_logs: result,
 					})
 				}.bind(this))
-				this.serverRequest = $.get('http://192.168.10.207:8000/api/devices-llogs/'+devices+'/?format=json', function(result) {
+				this.serverRequest = $.get('http://192.168.10.201:8000/api/devices-llogs/'+devices+'/?format=json', function(result) {
 					this.setState({
 						uc_logs: result,
 					})
 				}.bind(this))
-				this.serverRequest = $.get('http://192.168.10.207:8000/api/devices-ewlogs/'+devices+'/?format=json', function(result) {
+				this.serverRequest = $.get('http://192.168.10.201:8000/api/devices-ewlogs/'+devices+'/?format=json', function(result) {
 					this.setState({
 						ew_logs: result,
 					})
