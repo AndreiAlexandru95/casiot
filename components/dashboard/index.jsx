@@ -8,7 +8,7 @@ import Dash from './Dash.jsx'
 var device_sock = 'ws://'+window.location.host+'/devices/'
 var current_user = null
 
-$.get('http://192.168.10.207:8000/api/user/?format=json', function(result){
+$.get('http://[fd14:ac28:a278:1:edfb:5a6b:42f4:8436]:8000/api/user/?format=json', function(result){
 	current_user = result
 	render_component()
 })

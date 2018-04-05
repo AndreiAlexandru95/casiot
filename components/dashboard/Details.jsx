@@ -30,12 +30,12 @@ export default class Details extends React.PureComponent {
 				nextProps.device_list.map(function(device) {
 					let index = this.props.device_list.findIndex((dev)=>{return dev.id == device.id})
 					if (index < 0) {
-						this.serverRequest = $.get('http://192.168.10.207:8000/api/device-chart/'+device.id+'/?format=json', function(data) {
+						this.serverRequest = $.get('http://[fd14:ac28:a278:1:edfb:5a6b:42f4:8436]:8000/api/device-chart/'+device.id+'/?format=json', function(data) {
 							this.setState({
 								exp_chart: this.state.exp_chart.concat(data)
 							})
 						}.bind(this))
-						this.serverRequest = $.get('http://192.168.10.207:8000/api/device-log/'+device.id+'/?format=json', function(data) {
+						this.serverRequest = $.get('http://[fd14:ac28:a278:1:edfb:5a6b:42f4:8436]:8000/api/device-log/'+device.id+'/?format=json', function(data) {
 							this.setState({
 								exp_log: this.state.exp_log.concat(data)
 							})
