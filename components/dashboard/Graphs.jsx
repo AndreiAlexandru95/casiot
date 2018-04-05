@@ -106,7 +106,7 @@ export default class Graphs extends React.PureComponent {
 			})
 			if (nextProps.device_list.length > 0) {
 				let devices = nextProps.device_list.map(dev => dev.id).join('-')
-				this.serverRequest = $.get('http://192.168.10.201:8000/api/devices-lchart/'+devices+'/?format=json', function(result) {
+				this.serverRequest = $.get('http://192.168.10.207:8000/api/devices-lchart/'+devices+'/?format=json', function(result) {
 					result.forEach(function(d) {
 						if (parseDate(d.day)) {
 							d.day = parseDate(d.day)
@@ -123,7 +123,7 @@ export default class Graphs extends React.PureComponent {
 				nextProps.device_list.map(function(device) {
 					let index = this.props.device_list.findIndex((dev)=>{return dev.id == device.id})
 					if (index < 0) {
-						this.serverRequest = $.get('http://192.168.10.201:8000/api/device-charta/'+device.id+'/?format=json', function(data) {
+						this.serverRequest = $.get('http://192.168.10.207:8000/api/device-charta/'+device.id+'/?format=json', function(data) {
 							data.forEach(function(d) {
 								if (parseDate(d.day)) {
 									d.day = parseDate(d.day)
@@ -136,7 +136,7 @@ export default class Graphs extends React.PureComponent {
 								a_comb_data: this.state.a_comb_data.concat(data),
 							})
 						}.bind(this))
-						this.serverRequest = $.get('http://192.168.10.201:8000/api/device-chartb/'+device.id+'/?format=json', function(data) {
+						this.serverRequest = $.get('http://192.168.10.207:8000/api/device-chartb/'+device.id+'/?format=json', function(data) {
 							data.forEach(function(d) {
 								if (parseDate(d.day)) {
 									d.day = parseDate(d.day)
@@ -149,7 +149,7 @@ export default class Graphs extends React.PureComponent {
 								b_comb_data: this.state.b_comb_data.concat(data),
 							})
 						}.bind(this))
-						this.serverRequest = $.get('http://192.168.10.201:8000/api/device-chartc/'+device.id+'/?format=json', function(data) {
+						this.serverRequest = $.get('http://192.168.10.207:8000/api/device-chartc/'+device.id+'/?format=json', function(data) {
 							data.forEach(function(d) {
 								if (parseDate(d.day)) {
 									d.day = parseDate(d.day)
@@ -162,7 +162,7 @@ export default class Graphs extends React.PureComponent {
 								c_comb_data: this.state.c_comb_data.concat(data),
 							})
 						}.bind(this))
-						this.serverRequest = $.get('http://192.168.10.201:8000/api/device-chartd/'+device.id+'/?format=json', function(data) {
+						this.serverRequest = $.get('http://192.168.10.207:8000/api/device-chartd/'+device.id+'/?format=json', function(data) {
 							data.forEach(function(d) {
 								if (parseDate(d.day)) {
 									d.day = parseDate(d.day)
@@ -175,7 +175,7 @@ export default class Graphs extends React.PureComponent {
 								d_comb_data: this.state.d_comb_data.concat(data),
 							})
 						}.bind(this))
-						this.serverRequest = $.get('http://192.168.10.201:8000/api/device-charte/'+device.id+'/?format=json', function(data) {
+						this.serverRequest = $.get('http://192.168.10.207:8000/api/device-charte/'+device.id+'/?format=json', function(data) {
 							data.forEach(function(d) {
 								if (parseDate(d.day)) {
 									d.day = parseDate(d.day)
@@ -188,7 +188,7 @@ export default class Graphs extends React.PureComponent {
 								e_comb_data: this.state.e_comb_data.concat(data),
 							})
 						}.bind(this))
-						this.serverRequest = $.get('http://192.168.10.201:8000/api/device-chartt/'+device.id+'/?format=json', function(data) {
+						this.serverRequest = $.get('http://192.168.10.207:8000/api/device-chartt/'+device.id+'/?format=json', function(data) {
 							data.forEach(function(d) {
 								if (parseDate(d.day)) {
 									d.day = parseDate(d.day)

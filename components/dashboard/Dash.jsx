@@ -44,7 +44,7 @@ export default class Dash extends React.PureComponent {
 	}
 
 	getDeviceList() {
-		this.serverRequest = $.get('http://192.168.10.201:8000/api/devices/?format=json', function(result) {
+		this.serverRequest = $.get('http://192.168.10.207:8000/api/devices/?format=json', function(result) {
 			this.setState({
 				device_list: result,
 			});
@@ -76,7 +76,7 @@ export default class Dash extends React.PureComponent {
 		this.getDeviceList()
 		let devices = this.state.device_show_list.map(dev => dev.id).join('-')
 		if (devices != '') {
-			this.serverRequest = $.get('http://192.168.10.201:8000/api/devices-details/'+devices+'/?format=json', function(data) {
+			this.serverRequest = $.get('http://192.168.10.207:8000/api/devices-details/'+devices+'/?format=json', function(data) {
 				this.setState({
 					device_show_list: data,
 					update: !this.state.update,
