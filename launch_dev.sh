@@ -10,3 +10,6 @@ memcached &
 
 echo "<Start Django Server>"
 python manage.py runserver [::]:8000
+
+echo "<Start CoAP Server>"
+python CoAPServer.py
