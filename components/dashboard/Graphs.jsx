@@ -576,7 +576,7 @@ export default class Graphs extends React.PureComponent {
 					</div>
 					<div className="pl-5 swidth">
 						Date Gradient
-						<SliderWithTooltip min={0} max={5} marks={{0: 'None', 1: '5m', 2: '15m', 3: '30m', 4: '1h', 5: '1d'}} onAfterChange={this.handleDateSlider.bind(this)} defaultValue={this.state.date_sl_val}/>
+						<SliderWithTooltip min={0} max={5} marks={{0: 'None', 1: '5m', 2: '15m', 3: '30m', 4: '1h', 5: '1d'}} onAfterChange={this.handleDateSlider.bind(this)} defaultValue={this.state.date_sl_val} tipProps={{placement: 'bottom', prefixCls: 'rc-slider-tooltip', overlay: tipFormatter(value)}}/>
 					</div>
 					<div className="pl-5 swidth">
 						<span>
@@ -585,7 +585,7 @@ export default class Graphs extends React.PureComponent {
 							</span>
 							<span>  Bucket Gradient </span>
 						</span>
-						<SliderWithTooltip min={1} max={500} marks={{1: '1', 500: '500'}} onAfterChange={this.handleBucketSlider.bind(this)} defaultValue={this.state.grade_sl_val} disabled={this.state.dis_b_grad}/>
+						<SliderWithTooltip min={1} max={500} marks={{1: '1', 500: '500'}} onAfterChange={this.handleBucketSlider.bind(this)} defaultValue={this.state.grade_sl_val} disabled={this.state.dis_b_grad} tipProps={{placement: 'bottom', prefixCls: 'rc-slider-tooltip', overlay: tipFormatter(value)}}/>
 					</div>
 					<span className="pth pl-5">
 						<input type="checkbox" checked={this.state.combine} onChange={this.handleCombineChange.bind(this)}/>
