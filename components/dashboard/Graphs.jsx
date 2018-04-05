@@ -466,7 +466,7 @@ export default class Graphs extends React.PureComponent {
 				}
 		}
 
-		if (data.length > 0) {
+		if (data.length > 0 && this.state.device_list.length > 0) {
 			var margin = {
 				top: 20,
 				right: 20,

@@ -131,7 +131,7 @@ export default class Logs extends React.PureComponent {
 		let logs = this.state.c_logs
 		var parseRealDate = d3.timeParse("%Y-%m-%dT%H:%M:%S.%L")
 		var dateFormat = d3.timeFormat("(%d/%m/%Y %H:%M:%S)")
-		if (logs.length > 0) {
+		if (logs.length > 0 && this.state.device_list.length > 0) {
 			return logs.map(function(log) {
 				let log_key = "log-".concat(log.id.toString())
 				let log_dev = "dev".concat(log.device_id.toString())

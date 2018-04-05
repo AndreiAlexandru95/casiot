@@ -74,7 +74,6 @@ class DeviceConsumer(AsyncJsonWebsocketConsumer):
 			if device:
 				device.add_log(DeviceLog.INFO, 'SEND command {0}'.format(command[-3:]), datetime.datetime.now())
 				await self.channel_layer.group_send("cas_dev_list", {"type": "dev_info.update"})
-				await self.sendCoAPMessage("[192.168.10.254]", "test", "/path/")
 
 		if command == "cmd-sn":
 			dev_key = content.get("dev_key", None)
