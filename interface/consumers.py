@@ -49,6 +49,7 @@ class DeviceConsumer(AsyncJsonWebsocketConsumer):
 				device.timer = timer
 				device.save()
 				device.add_log(DeviceLog.INFO, 'SET timer {0}'.format(timer), datetime.datetime.now())
+				await sendCoAPMessage(address=device.ip_addr,m_to_send=device_time,p_to_send=("t", "T"))
 				await self.channel_layer.group_send("cas_dev_list", {"type": "dev_info.update"})
 
 		if command == "cmd-th":
