@@ -156,7 +156,7 @@ export default class Dash extends React.PureComponent {
 						</div>
 						{this.props.current_user.is_superuser &&
 							<Modal open={this.state.open} onClose={this.closeModal.bind(this)} little>
-								<button className="btn btn-block b-t-font m-bg-color mt-4">Flush Database</button>
+								<button className="btn btn-block b-t-font m-bg-color mt-4" onClick={this.flushDBClick.bind(this)}>Flush Database</button>
 							</Modal>
 						}
 						{!this.props.current_user.is_superuser &&
