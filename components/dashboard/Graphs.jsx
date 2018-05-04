@@ -324,6 +324,7 @@ export default class Graphs extends React.PureComponent {
 		}
 
 		data = data.filter((node)=>{return node.device_id == device_id})
+		data = this.removeDuplicates(data, 'day')
 
 		var th_min = this.state.device_list.find((dev)=> {return dev.id == device_id}).th_min
 		var th_max = this.state.device_list.find((dev)=> {return dev.id == device_id}).th_max
@@ -449,6 +450,21 @@ export default class Graphs extends React.PureComponent {
 		}
 	}
 
+	removeDuplicates(arr, prop) {
+		var obj = {}
+		var len = arr.length
+		
+		for (var i=0; i < len; i++) {
+			if (!obj[arr[i][prop]]) obj[arr[i][prop]] = arr[i]
+		}
+
+		var newArr = []
+
+		for (var key in obj) newArr.push(obj[key])
+		
+		return newArr
+	}
+
 	renderMultiLineChart() {
 		switch(this.state.date_sl_val) {
 			case 1:
@@ -473,7 +489,16 @@ export default class Graphs extends React.PureComponent {
 					var data = this.state.t_comb_data
 				}
 		}
-
+		var dev_lst = this.state.device_list
+		var dev_id_list = []
+		dev_lst.forEach(function(dev) {
+			dev_id_list.push(dev.id)
+		})
+		
+		data = data.filter((node)=>{return dev_id_list.includes(node.device_id)})
+		data = data.filter((node, index, self) => {return index == self.findIndex((t) => {return t.device_id == node.device_id && t.day.getTime() == node.day.getTime()})})
+		
+		
 		if (data.length > 0 && this.state.device_list.length > 0) {
 			var margin = {
 				top: 20,
